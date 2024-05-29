@@ -1,0 +1,27 @@
+completion-plugins:
+  - name: openai
+    source: ./plugins/openai_completions_rust.wasm
+    hash: c81c650d529d42fdb3cc8ea128fa9cdb611c01f55a920606159880613d395442
+    apiKey: OPENAI_API_KEY
+    url: api.openai.com
+    model: 4o
+  - name: perplexity
+    source: ./plugins/perplexity_completions_rust.wasm
+    hash: b9fd38f7902dbee73df40d35cfd4d9928121b6f2a5ad1011de63d78b2d18be45
+    apiKey: PERPLEXITY_API_KEY
+    url: api.perplexity.ai
+    model: llam3-sso
+  - name: openaigo
+    source: ./plugins/openai_completions_go.wasm
+    hash: 986037d72d1383dcb8c9ecc6108f135c07ab4937c5d0f52f567c5cecf92f8ed2
+    apiKey: OPENAI_API_KEY
+    url: api.openai.com
+    model: gpt-4o
+    wasi: true
+  - name: openaicsharp
+    source: ./plugins/openai_completions_csharp.wasm
+    hash: 3ca67e171204f19ca205e35a531e997f4d3ba3cf97bd891be88a3de703cbcc7e
+    apiKey: OPENAI_API_KEY
+    url: api.openai.com
+    model: gpt-4o
+    wasi: true
