@@ -15,8 +15,6 @@ import (
 type Model struct {
 	Name          string   `json:"name"`
 	Aliases       []string `json:"aliases"`
-	MaxInputChars int      `json:"max_input_chars"`
-	Fallback      string   `json:"fallback"`
 }
 
 type CompletionPluginConfig struct {

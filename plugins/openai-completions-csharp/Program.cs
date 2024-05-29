@@ -17,12 +17,6 @@ public class Model
 
     [JsonPropertyName("aliases")]
     public string[] Aliases { get; set; }
-
-    [JsonPropertyName("max_input_chars")]
-    public int MaxInputChars { get; set; }
-
-    [JsonPropertyName("fallback")]
-    public string Fallback { get; set; }
 }
 
 public class Message
@@ -69,14 +63,14 @@ public class Program
 {
     static readonly Model[] MODELS =
     [
-        new Model { Name = "gpt-4o", Aliases = ["4o"], MaxInputChars = 128000, Fallback = "gpt-4" },
-        new Model { Name = "gpt-4", Aliases = ["4"], MaxInputChars = 24500, Fallback = "gpt-3.5-turbo" },
-        new Model { Name = "gpt-4-1106-preview", Aliases = ["128k"], MaxInputChars = 392000, Fallback = "gpt-4" },
-        new Model { Name = "gpt-4-32k", Aliases = ["32k"], MaxInputChars = 98000, Fallback = "gpt-4" },
-        new Model { Name = "gpt-3.5-turbo", Aliases = ["35t"], MaxInputChars = 12250, Fallback = "gpt-3.5" },
-        new Model { Name = "gpt-3.5-turbo-1106", Aliases = ["35t-1106"], MaxInputChars = 12250, Fallback = "gpt-3.5-turbo" },
-        new Model { Name = "gpt-3.5-turbo-16k", Aliases = ["35t16k"], MaxInputChars = 44500, Fallback = "gpt-3.5" },
-        new Model { Name = "gpt-3.5", Aliases = ["35"], MaxInputChars = 12250, Fallback = "" },
+        new Model { Name = "gpt-4o", Aliases = ["4o"] },
+        new Model { Name = "gpt-4", Aliases = ["4"] },
+        new Model { Name = "gpt-4-1106-preview", Aliases = ["128k"] },
+        new Model { Name = "gpt-4-32k", Aliases = ["32k"] },
+        new Model { Name = "gpt-3.5-turbo", Aliases = ["35t"] },
+        new Model { Name = "gpt-3.5-turbo-1106", Aliases = ["35t-1106"] },
+        new Model { Name = "gpt-3.5-turbo-16k", Aliases = ["35t16k"] },
+        new Model { Name = "gpt-3.5", Aliases = ["35"] },
     ];
 
     public static void Main()

@@ -30,46 +30,32 @@ struct AIConfig {
 struct Model {
     name: &'static str,
     aliases: [&'static str; 1],
-    max_input_chars: usize,
-    fallback: &'static str,
 }
 
 static MODELS: [Model; 6] = [
     Model {
         name: "llama-3-sonar-small-32k-online",
         aliases: ["llam3-sso"],
-        max_input_chars: 28000,
-        fallback: "",
     },
     Model {
         name: "llama-3-sonar-small-32k-chat",
         aliases: ["llama3-ss"],
-        max_input_chars: 32768,
-        fallback: "",
     },
     Model {
         name: "llama-3-sonar-large-32k-chat",
         aliases: ["llam3-sl"],
-        max_input_chars: 32768,
-        fallback: "",
     },
     Model {
         name: "llama-3-sonar-large-32k-online",
         aliases: ["llam3-slo"],
-        max_input_chars: 28000,
-        fallback: "",
     },
     Model {
         name: "llama-3-8b-instruct",
         aliases: ["llam3-8bi"],
-        max_input_chars: 8192,
-        fallback: "",
     },
     Model {
         name: "llama-3-70b-instruct",
         aliases: ["llam3-70bi"],
-        max_input_chars: 8192,
-        fallback: "",
     },
 ];
 

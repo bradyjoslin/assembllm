@@ -30,58 +30,40 @@ struct OpenAIConfig {
 struct Model {
     name: &'static str,
     aliases: [&'static str; 1],
-    max_input_chars: usize,
-    fallback: &'static str,
 }
 
 static MODELS: [Model; 8] = [
     Model {
         name: "gpt-4o",
         aliases: ["4o"],
-        max_input_chars: 128000,
-        fallback: "gpt-4",
     },
     Model {
         name: "gpt-4",
         aliases: ["4"],
-        max_input_chars: 24500,
-        fallback: "gpt-3.5-turbo",
     },
     Model {
         name: "gpt-4-1106-preview",
         aliases: ["128k"],
-        max_input_chars: 392000,
-        fallback: "gpt-4",
     },
     Model {
         name: "gpt-4-32k",
         aliases: ["32k"],
-        max_input_chars: 98000,
-        fallback: "gpt-4",
     },
     Model {
         name: "gpt-3.5-turbo",
         aliases: ["35t"],
-        max_input_chars: 12250,
-        fallback: "gpt-3.5",
     },
     Model {
         name: "gpt-3.5-turbo-1106",
         aliases: ["35t-1106"],
-        max_input_chars: 12250,
-        fallback: "gpt-3.5-turbo",
     },
     Model {
         name: "gpt-3.5-turbo-16k",
         aliases: ["35t16k"],
-        max_input_chars: 44500,
-        fallback: "gpt-3.5",
     },
     Model {
         name: "gpt-3.5",
         aliases: ["35"],
-        max_input_chars: 12250,
-        fallback: "",
     },
 ];
 

@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/charmbracelet/huh"
 	extism "github.com/extism/go-sdk"
@@ -18,6 +20,7 @@ type AppConfig struct {
 	Temperature   string
 	Role          string
 	Raw           bool
+	Version       bool
 }
 
 var (
@@ -25,15 +28,52 @@ var (
 
 	logLevel = extism.LogLevelError
 
+	appName    = filepath.Base(os.Args[0])
+	configFile = "config.yaml"
+	configPath string
+	version    = "0.1.0"
+
 	rootCmd = &cobra.Command{
-		Use:           "assembllm [prompt]",
+		Use:           appName + " [prompt]",
+		Short:         "A WASM plug-in based CLI for AI chat completions",
 		RunE:          runCommand,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 	}
-
-	configPath = "config.yaml"
 )
+
+func init() {
+	// Get the user's home directory
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatalf("Unable to get user's home directory: %v", err)
+	}
+
+	// Define the path to the configuration file
+	configPath = filepath.Join(homeDir, "."+appName, configFile)
+
+	// Check if the configuration file exists
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		// If not, create it with default settings
+
+		// Ensure the directory exists
+		if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+			log.Fatalf("Unable to create directory for config file: %v", err)
+		}
+
+		// Read the default configuration from the config.yaml file in the root directory
+		defaultConfig, err := os.ReadFile(configFile)
+		if err != nil {
+			log.Fatalf("Unable to read default config file: %v", err)
+		}
+
+		// Write the default configuration to the new configuration file
+		err = os.WriteFile(configPath, defaultConfig, 0644)
+		if err != nil {
+			log.Fatalf("Unable to write default config to file: %v", err)
+		}
+	}
+}
 
 // Gets the available models from the completions plugin and prompts the user to choose one
 func chooseModel(pluginCfg CompletionPluginConfig) (string, error) {
@@ -69,6 +109,7 @@ func initializeFlags() {
 	flags.StringVarP(&appCfg.Temperature, "temperature", "t", "", "The temperature to use")
 	flags.StringVarP(&appCfg.Role, "role", "r", "", "The role to use")
 	flags.BoolVarP(&appCfg.Raw, "raw", "", false, "Raw output without formatting")
+	flags.BoolVarP(&appCfg.Version, "version", "v", false, "Print the version")
 	flags.SortFlags = false
 }
 
@@ -122,6 +163,11 @@ func overridePluginConfigWithUserFlags(appConfig AppConfig, pluginConfig Complet
 }
 
 func runCommand(cmd *cobra.Command, args []string) error {
+	if appCfg.Version {
+		fmt.Println(appName + " " + version)
+		return nil
+	}
+
 	pluginCfg, err := getPluginConfig(appCfg.Name, configPath)
 	if err != nil {
 		return err

@@ -11,8 +11,6 @@ import (
 type Model struct {
 	Name          string   `json:"name"`
 	Aliases       []string `json:"aliases"`
-	MaxInputChars int      `json:"max_input_chars"`
-	Fallback      string   `json:"fallback"`
 }
 
 type Message struct {
@@ -44,50 +42,34 @@ var models = []Model{
 	{
 		Name:          "gpt-4o",
 		Aliases:       []string{"4o"},
-		MaxInputChars: 128000,
-		Fallback:      "gpt-4",
 	},
 	{
 		Name:          "gpt-4",
 		Aliases:       []string{"4"},
-		MaxInputChars: 24500,
-		Fallback:      "gpt-3.5-turbo",
 	},
 	{
 		Name:          "gpt-4-1106-preview",
 		Aliases:       []string{"128k"},
-		MaxInputChars: 392000,
-		Fallback:      "gpt-4",
 	},
 	{
 		Name:          "gpt-4-32k",
 		Aliases:       []string{"32k"},
-		MaxInputChars: 98000,
-		Fallback:      "gpt-4",
 	},
 	{
 		Name:          "gpt-3.5-turbo",
 		Aliases:       []string{"35t"},
-		MaxInputChars: 12250,
-		Fallback:      "gpt-3.5",
 	},
 	{
 		Name:          "gpt-3.5-turbo-1106",
 		Aliases:       []string{"35t-1106"},
-		MaxInputChars: 12250,
-		Fallback:      "gpt-3.5-turbo",
 	},
 	{
 		Name:          "gpt-3.5-turbo-16k",
 		Aliases:       []string{"35t16k"},
-		MaxInputChars: 44500,
-		Fallback:      "gpt-3.5",
 	},
 	{
 		Name:          "gpt-3.5",
 		Aliases:       []string{"35"},
-		MaxInputChars: 12250,
-		Fallback:      "",
 	},
 }
 
