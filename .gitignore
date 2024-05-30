@@ -25,6 +25,7 @@ assembllm
 mono_crash.*
 
 # Build results
+dist/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

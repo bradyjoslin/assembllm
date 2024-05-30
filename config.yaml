@@ -32,3 +32,10 @@ completion-plugins:
     url: api.openai.com
     model: gpt-4o
     wasi: true
+  - name: openaits
+    source: ./plugins/openai_completions_typescript.wasm
+    hash: a9110e703ff5c68cbf028c725851fd287ac1ef0b909b1d97c600f881e272fa8c
+    apiKey: OPENAI_API_KEY
+    url: api.openai.com
+    model: gpt-4o
+    wasi: true
