@@ -38,8 +38,9 @@ Plug-ins are powered by [Extism](https://extism.org), a cross-language framework
 - `source`: a reference to plug-in wasm file.  Can be a file path or http location.
 - `hash`: sha 256-based hash of the wasm file for validation.  Optional, but recommended.
 - `apiKey`: environment variable name containing the API Key for the plugin's service
+- `accountId`: environment variable name containing the AccountID for the plugin's service.  Optional, used by some services like [Cloudflare](https://developers.cloudflare.com/workers-ai/get-started/rest-api/#1-get-api-token-and-account-id).
 - `url`: the base url for the service used by the plug-in.  By default the plug-ins cannot make http calls, this grants access to the plug-in to call the API resource.
-- `model`: default model to use
+- `model`: default model to use. Optional.
 - `wasi`: whether or not the plugin requires WASI
 
 ### Plug-in Architecture
