@@ -109,6 +109,7 @@ A `completion` function should be exported by the plug-in that takes the prompt 
 The plug-in is also provided configuration data from the `assembllm` host:
 
 - `api_key`: user's API Key to use for the API service call
+- `accountId`: Account ID for the plug-in service. Used by some services like [Cloudflare](https://developers.cloudflare.com/workers-ai/get-started/rest-api/#1-get-api-token-and-account-id).
 - `model`: LLM model to use for completions response
 - `temperature`: temperature value for the completion response
 - `role`: prompt to use as the system message for the prompt
