@@ -32,7 +32,7 @@ Plug-ins are powered by [Extism](https://extism.org), a cross-language framework
 
 ### Plug-in Configuration
 
-`assembllm` chat completion plugins are defined in `~/.assembllm/config.yaml`.  Each plugin is defined by:
+`assembllm` chat completion plugins are defined in `config.yaml`.  Each plugin is defined by:
 
 - `name`: unique name for the plugin
 - `source`: a reference to plug-in wasm file.  Can be a file path or http location.
