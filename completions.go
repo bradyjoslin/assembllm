@@ -13,8 +13,8 @@ import (
 )
 
 type Model struct {
-	Name          string   `json:"name"`
-	Aliases       []string `json:"aliases"`
+	Name    string   `json:"name"`
+	Aliases []string `json:"aliases"`
 }
 
 type CompletionPluginConfig struct {
@@ -22,6 +22,7 @@ type CompletionPluginConfig struct {
 	Source      string `yaml:"source"`
 	Hash        string `yaml:"hash"`
 	APIKey      string `yaml:"apiKey"`
+	AccountId   string `yaml:"accountId"`
 	URL         string `yaml:"url"`
 	Model       string `yaml:"model"`
 	Temperature string `yaml:"temperature"`
@@ -121,7 +122,7 @@ func (p CompletionPluginConfig) createPlugin() (CompletionsPlugin, error) {
 	}
 
 	plugin.AllowedHosts = []string{p.URL}
-	plugin.Config = map[string]string{"api_key": p.APIKey, "model": p.Model, "temperature": p.Temperature, "role": p.Role}
+	plugin.Config = map[string]string{"api_key": p.APIKey, "model": p.Model, "temperature": p.Temperature, "role": p.Role, "account_id": p.AccountId}
 
 	plugin.SetLogLevel(p.LogLevel)
 	plugin.SetLogger(func(level extism.LogLevel, message string) {
@@ -184,6 +185,7 @@ func (p *CompletionPluginConfig) UnmarshalYAML(unmarshal func(interface{}) error
 	}
 
 	raw.APIKey = os.Getenv(raw.APIKey)
+	raw.AccountId = os.Getenv(raw.AccountId)
 	raw.LogLevel = logLevel
 
 	*p = CompletionPluginConfig(raw)

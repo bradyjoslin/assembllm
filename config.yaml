@@ -5,6 +5,13 @@ completion-plugins:
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: 4o
+  - name: cloudflare
+    source: ./plugins/cloudflare_completions_rust.wasm
+    hash: dd58ff133011b296ff5ba00cc3b0b4df34c1a176e5aebff9643d1ac83b88c72b
+    apiKey: WORKERS_AI_TOKEN
+    accountId: CF_ACCOUNT_ID
+    url: api.cloudflare.com
+    model: llama-2-7b
   - name: perplexity
     source: ./plugins/perplexity_completions_rust.wasm
     hash: 9c1a87483040d5033866fc5b8581cc8aa7bc18abd9a601a14a4dec998a5a75f9
