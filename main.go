@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/huh/spinner"
 	extism "github.com/extism/go-sdk"
 	"github.com/spf13/cobra"
 )
@@ -149,14 +150,25 @@ func runCommand(cmd *cobra.Command, args []string) error {
 
 	prompt := generatePrompt(args, appCfg.Raw)
 
-	res, err := pluginCfg.generateResponse(prompt, appCfg.Raw)
-	if err != nil {
-		return err
+	var res string
+	errCh := make(chan error)
+
+	action := func() {
+		res, err = pluginCfg.generateResponse(prompt, appCfg.Raw)
+		if err != nil {
+			errCh <- err
+		}
 	}
 
-	fmt.Print(res)
+	_ = spinner.New().Title("Generating...").Action(action).Run()
 
-	return nil
+	select {
+	case err := <-errCh:
+		return err
+	default:
+		fmt.Print(res)
+		return nil
+	}
 }
 
 func main() {
