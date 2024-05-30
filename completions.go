@@ -91,9 +91,13 @@ func (p CompletionPluginConfig) createPlugin() (CompletionsPlugin, error) {
 			Hash: p.Hash,
 		}
 	} else {
+		homeDir, _ := os.UserHomeDir()
+		p.Source = strings.Replace(p.Source, "~", homeDir, 1)
+
 		if !isFilePath(p.Source) {
 			return CompletionsPlugin{}, fmt.Errorf("file not found: %s", p.Source)
 		}
+
 		wasm = extism.WasmFile{
 			Path: p.Source,
 			Hash: p.Hash,

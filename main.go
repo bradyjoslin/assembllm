@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -29,8 +28,7 @@ var (
 	logLevel = extism.LogLevelError
 
 	appName    = filepath.Base(os.Args[0])
-	configFile = "config.yaml"
-	configPath string
+	configPath = "config.yaml"
 	version    = "0.1.0"
 
 	rootCmd = &cobra.Command{
@@ -41,39 +39,6 @@ var (
 		SilenceErrors: true,
 	}
 )
-
-func init() {
-	// Get the user's home directory
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatalf("Unable to get user's home directory: %v", err)
-	}
-
-	// Define the path to the configuration file
-	configPath = filepath.Join(homeDir, "."+appName, configFile)
-
-	// Check if the configuration file exists
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		// If not, create it with default settings
-
-		// Ensure the directory exists
-		if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
-			log.Fatalf("Unable to create directory for config file: %v", err)
-		}
-
-		// Read the default configuration from the config.yaml file in the root directory
-		defaultConfig, err := os.ReadFile(configFile)
-		if err != nil {
-			log.Fatalf("Unable to read default config file: %v", err)
-		}
-
-		// Write the default configuration to the new configuration file
-		err = os.WriteFile(configPath, defaultConfig, 0644)
-		if err != nil {
-			log.Fatalf("Unable to write default config to file: %v", err)
-		}
-	}
-}
 
 // Gets the available models from the completions plugin and prompts the user to choose one
 func chooseModel(pluginCfg CompletionPluginConfig) (string, error) {
