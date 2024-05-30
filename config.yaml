@@ -20,7 +20,7 @@ completion-plugins:
     model: llam3-sso
   - name: openaigo
     source: ./plugins/openai_completions_go.wasm
-    hash: 0e127b2f3cdffeaa440a7d900156887416799efb0a7e88ed6862dbe379fd8143
+    hash: 93f3517589bd44dfde3a0406ab2d574f239aca10378996bb6c63e8d73a510e2b
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: gpt-4o

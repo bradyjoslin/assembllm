@@ -9,8 +9,8 @@ import (
 )
 
 type Model struct {
-	Name          string   `json:"name"`
-	Aliases       []string `json:"aliases"`
+	Name    string   `json:"name"`
+	Aliases []string `json:"aliases"`
 }
 
 type Message struct {
@@ -40,36 +40,36 @@ type CompletionsResponse struct {
 
 var models = []Model{
 	{
-		Name:          "gpt-4o",
-		Aliases:       []string{"4o"},
+		Name:    "gpt-4o",
+		Aliases: []string{"4o"},
 	},
 	{
-		Name:          "gpt-4",
-		Aliases:       []string{"4"},
+		Name:    "gpt-4",
+		Aliases: []string{"4"},
 	},
 	{
-		Name:          "gpt-4-1106-preview",
-		Aliases:       []string{"128k"},
+		Name:    "gpt-4-1106-preview",
+		Aliases: []string{"128k"},
 	},
 	{
-		Name:          "gpt-4-32k",
-		Aliases:       []string{"32k"},
+		Name:    "gpt-4-32k",
+		Aliases: []string{"32k"},
 	},
 	{
-		Name:          "gpt-3.5-turbo",
-		Aliases:       []string{"35t"},
+		Name:    "gpt-3.5-turbo",
+		Aliases: []string{"35t"},
 	},
 	{
-		Name:          "gpt-3.5-turbo-1106",
-		Aliases:       []string{"35t-1106"},
+		Name:    "gpt-3.5-turbo-1106",
+		Aliases: []string{"35t-1106"},
 	},
 	{
-		Name:          "gpt-3.5-turbo-16k",
-		Aliases:       []string{"35t16k"},
+		Name:    "gpt-3.5-turbo-16k",
+		Aliases: []string{"35t16k"},
 	},
 	{
-		Name:          "gpt-3.5",
-		Aliases:       []string{"35"},
+		Name:    "gpt-3.5",
+		Aliases: []string{"35"},
 	},
 }
 
@@ -86,13 +86,7 @@ func Models() int32 {
 	return 0
 }
 
-func getTemperature() (float64, error) {
-	temperature, _ := pdk.GetConfig("temperature")
-	if temperature == "" {
-		pdk.Log(pdk.LogInfo, "Temperature not set, using default value")
-		temperature = "0.7"
-	}
-
+func setTemperature(temperature string) (float64, error) {
 	temperatureFloat, err := strconv.ParseFloat(temperature, 32)
 	if err != nil {
 		return 0, fmt.Errorf("Temperature must be a float: %v", err)
@@ -104,13 +98,7 @@ func getTemperature() (float64, error) {
 	return temperatureFloat, nil
 }
 
-func getModel() (string, error) {
-	model, ok := pdk.GetConfig("model")
-	if !ok {
-		pdk.Log(pdk.LogInfo, "Model not set, using default value")
-		return models[0].Name, nil
-	}
-
+func setModel(model string) (string, error) {
 	var validModel string
 	for _, m := range models {
 		if model == m.Name {
@@ -175,14 +163,26 @@ func Completion() int32 {
 		pdk.Log(pdk.LogInfo, "Role not set")
 	}
 
-	temperature, err := getTemperature()
+	requested_temperature, _ := pdk.GetConfig("temperature")
+	if requested_temperature == "" {
+		pdk.Log(pdk.LogInfo, "Temperature not set, using default value")
+		requested_temperature = "0.7"
+	}
+
+	temperature, err := setTemperature(requested_temperature)
 	if err != nil {
 		pdk.Log(pdk.LogError, fmt.Sprintf("Error getting temperature: %v", err.Error()))
 		return 1
 	}
 	pdk.Log(pdk.LogInfo, fmt.Sprintf("Temperature: %v", temperature))
 
-	model, err := getModel()
+	requested_model, ok := pdk.GetConfig("model")
+	if !ok {
+		pdk.Log(pdk.LogInfo, "Model not set, using default value")
+		requested_model = models[0].Name
+	}
+
+	model, err := setModel(requested_model)
 	if err != nil {
 		pdk.Log(pdk.LogError, fmt.Sprintf("Error getting model: %v", err.Error()))
 		return 1
