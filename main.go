@@ -186,9 +186,7 @@ func runCommand(cmd *cobra.Command, args []string) error {
 	prompt := generatePrompt(args, appCfg.Raw)
 
 	ctx, cancel := context.WithCancel(context.Background())
-
 	var res string
-
 	action := func() {
 		res, err = pluginCfg.generateResponse(prompt, appCfg.Raw)
 		cancel()
