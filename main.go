@@ -2,8 +2,10 @@ package main
 
 import (
 	"bufio"
+	_ "embed"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -23,15 +25,22 @@ type AppConfig struct {
 	Version       bool
 }
 
+const (
+	configFileName = "config.yaml"
+	version        = "0.1.0"
+)
+
 var (
 	appCfg AppConfig
 
+	//go:embed config.yaml
+	defaultConfig []byte
+
+	configPath string
+
 	logLevel = extism.LogLevelError
 
-	appName    = filepath.Base(os.Args[0])
-	configPath = "config.yaml"
-	version    = "0.1.0"
-
+	appName = filepath.Base(os.Args[0])
 	rootCmd = &cobra.Command{
 		Use:           appName + " [prompt]",
 		Short:         "A WASM plug-in based CLI for AI chat completions",
@@ -64,6 +73,31 @@ func chooseModel(pluginCfg CompletionPluginConfig) (string, error) {
 		Run()
 
 	return model, nil
+}
+
+func init() {
+	// Get the user's home directory
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatalf("Unable to get user's home directory: %v", err)
+	}
+
+	// Define the path to the configuration file
+	configPath = filepath.Join(homeDir, "."+appName, configFileName)
+
+	// Check if the configuration file exists
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		// Ensure the directory exists
+		if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+			log.Fatalf("Unable to create directory for config file: %v", err)
+		}
+
+		// Write the default configuration to the new configuration file
+		err = os.WriteFile(configPath, defaultConfig, 0644)
+		if err != nil {
+			log.Fatalf("Unable to write default config to file: %v", err)
+		}
+	}
 }
 
 // Initializes the flags for the root command
