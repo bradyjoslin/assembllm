@@ -26,6 +26,26 @@ Flags:
   -h, --help                 help for assembllm
 ```
 
+Quickly get completion responses using default plug-in and model:
+
+![Demo](./assets/demo.gif)
+
+Select from a list of models supported by each plug-in:
+
+![Select Model Demo](./assets/choose_model_demo.gif)
+
+Get real time information from Perplexity:
+
+![Perplexity Demo](./assets/perplexity_demo.gif)
+
+Build prompts by piping from stdin:
+
+![Curl Demo](./assets/piping_curl_demo.gif)
+
+Roles sets the system prompt to influence the constraint and style of the response:
+
+![Curl Demo](./assets/roles_demo.gif)
+
 ## Plugins
 
 Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.
@@ -121,6 +141,6 @@ Sample plugins are provided in the `/plugins` directory and show how to build pl
 ## Installing
 
 ```bash
-# install with GO
+# install with Go
 go install github.com/bradyjoslin/assembllm
 ```
