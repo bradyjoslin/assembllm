@@ -1,8 +1,8 @@
 # assembllm
 
-`assembllm` brings the power of LLM AIs to the command line with an extensible, WebAssembly-based plugin architecture. Augment the capabilities of `assembllm` by creating custom LLM plugins in a variety of languages, including JavaScript, Rust, Go, C#, F#, AssemblyScript, Haskell, Zig, and C.
+`assembllm` brings the power of LLM AIs to the command line with an extensible, WebAssembly-based plugin architecture. Augment the capabilities of `assembllm` by creating custom plugins in a variety of languages, including JavaScript, Rust, Go, C#, F#, AssemblyScript, Haskell, Zig, and C.
 
-- **LLM Chat Completions**: Supports building LLM prompts piped from stdin and/or provided as an input argument.
+- **LLM Chat Completions**: Supports building prompts piped from stdin and/or provided as an input argument.
 - **Multi-AI Support**: Comes with built-in support for [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare](https://developers.cloudflare.com/workers-ai/models/#text-generation).
 - **Plug-in Architecture**: Easily extend support for other LLMs. Plug-ins can be added via configuration without the need to recompile `assembllm`.
 
