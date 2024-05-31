@@ -46,6 +46,13 @@ Role set the system prompt to influence the style and constraints of the prompt 
 
 ![Curl Demo](./assets/roles_demo.gif)
 
+## Installing
+
+```bash
+# install with Go
+go install github.com/bradyjoslin/assembllm
+```
+
 ## Plugins
 
 Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.
@@ -138,9 +145,3 @@ The plug-in is also provided configuration data from the `assembllm` host:
 - `temperature`: temperature value for the completion response
 - `role`: prompt to use as the system message for the prompt
 
-## Installing
-
-```bash
-# install with Go
-go install github.com/bradyjoslin/assembllm
-```
