@@ -1,39 +1,39 @@
 completion-plugins:
   - name: openai
-    source: ./plugins/openai_completions_rust.wasm
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7.wasm
     hash: 114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: 4o
   - name: cloudflare
-    source: ./plugins/cloudflare_completions_rust.wasm
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/dd58ff133011b296ff5ba00cc3b0b4df34c1a176e5aebff9643d1ac83b88c72b.wasm
     hash: dd58ff133011b296ff5ba00cc3b0b4df34c1a176e5aebff9643d1ac83b88c72b
     apiKey: WORKERS_AI_TOKEN
     accountId: CF_ACCOUNT_ID
     url: api.cloudflare.com
     model: llama-2-7b
   - name: perplexity
-    source: ./plugins/perplexity_completions_rust.wasm
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/9c1a87483040d5033866fc5b8581cc8aa7bc18abd9a601a14a4dec998a5a75f9.wasm
     hash: 9c1a87483040d5033866fc5b8581cc8aa7bc18abd9a601a14a4dec998a5a75f9
     apiKey: PERPLEXITY_API_KEY
     url: api.perplexity.ai
     model: llam3-sso
   - name: openaigo
-    source: ./plugins/openai_completions_go.wasm
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/93f3517589bd44dfde3a0406ab2d574f239aca10378996bb6c63e8d73a510e2b.wasm
     hash: 93f3517589bd44dfde3a0406ab2d574f239aca10378996bb6c63e8d73a510e2b
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: gpt-4o
     wasi: true
   - name: openaicsharp
-    source: ./plugins/openai_completions_csharp.wasm
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/6d2e458bf3eea4925503bc7803c0d01366430a8e2779bd088b8f9887745b4e00.wasm
     hash: 6d2e458bf3eea4925503bc7803c0d01366430a8e2779bd088b8f9887745b4e00
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: gpt-4o
     wasi: true
   - name: openaits
-    source: ./plugins/openai_completions_typescript.wasm
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/a9110e703ff5c68cbf028c725851fd287ac1ef0b909b1d97c600f881e272fa8c.wasm
     hash: a9110e703ff5c68cbf028c725851fd287ac1ef0b909b1d97c600f881e272fa8c
     apiKey: OPENAI_API_KEY
     url: api.openai.com
