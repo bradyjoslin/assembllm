@@ -34,15 +34,15 @@ Select from a list of models supported by each plug-in:
 
 ![Select Model Demo](./assets/choose_model_demo.gif)
 
-Get real time information from Perplexity:
+Get real time information from Perplexity plug-in:
 
 ![Perplexity Demo](./assets/perplexity_demo.gif)
 
-Build prompts by piping from stdin:
+Build complex prompts by piping from stdin:
 
 ![Curl Demo](./assets/piping_curl_demo.gif)
 
-Roles sets the system prompt to influence the constraint and style of the response:
+Role set the system prompt to influence the style and constraints of the prompt response:
 
 ![Curl Demo](./assets/roles_demo.gif)
 
@@ -50,9 +50,13 @@ Roles sets the system prompt to influence the constraint and style of the respon
 
 Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.
 
+## Sample Plugins
+
+Sample plugins are provided in the `/plugins` directory and show how to build plug-ins using Rust, TypeScript, Go, and C#.   These samples are also used in the default configuration.
+
 ### Plug-in Configuration
 
-`assembllm` chat completion plugins are defined in `config.yaml`.  Each plugin is defined by:
+`assembllm` chat completion plugins are defined in `config.yaml` that is stored in `~/.assembllm`.  Each plugin is defined by:
 
 - `name`: unique name for the plugin
 - `source`: a reference to plug-in wasm file.  Can be a file path or http location.
@@ -133,10 +137,6 @@ The plug-in is also provided configuration data from the `assembllm` host:
 - `model`: LLM model to use for completions response
 - `temperature`: temperature value for the completion response
 - `role`: prompt to use as the system message for the prompt
-
-## Sample Plugins
-
-Sample plugins are provided in the `/plugins` directory and show how to build plug-ins using C#, Rust, and Go.   These samples are also used in the default configuration.
 
 ## Installing
 
