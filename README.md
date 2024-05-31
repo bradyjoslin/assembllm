@@ -3,7 +3,7 @@
 `assembllm` brings the power of LLM AIs to the command line with an extensible, WebAssembly-based plugin architecture.
 
 - **LLM Chat Completions**: Supports building prompts piped from stdin and/or provided as an input argument.
-- **Multi-AI Support**: Comes with built-in support for [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare](https://developers.cloudflare.com/workers-ai/models/#text-generation).
+- **Multi-AI Support**: Comes with built-in support for [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation).
 - **Plug-in Architecture**: Easily extend support for other LLMs. Plug-ins can be added via configuration without the need to recompile `assembllm`.
 - **Cross-language support**: Create custom plugins in a variety of languages, including JavaScript, Rust, Go, C#, F#, AssemblyScript, Haskell, Zig, and C.
 
@@ -43,7 +43,7 @@ Build complex prompts by piping from stdin:
 
 ![Curl Demo](./assets/piping_curl_demo.gif)
 
-Role set the system prompt to influence the style and constraints of the prompt response:
+Use roles to set the system prompt that influences the style and constraints of the prompt response:
 
 ![Curl Demo](./assets/roles_demo.gif)
 
@@ -68,7 +68,7 @@ Sample plugins are provided in the `/plugins` directory implemented using Rust, 
 
 The provided plug-in configuration is used to define an [Extism manifest](https://extism.org/docs/concepts/manifest/) that `assembllm` uses to load the Wasm module, grant it the relevant permissions, and provide configuration data.  Wasm is sandboxed by default, unable to access the filesystem, make network calls, or access system information like environment variables unless explicitly granted by the host.
 
-In this sample configuration file we're importing a plug-in named `openai` whose Wasm source is loaded from a remote URL.  A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plug-in will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plug-in.  The base URL the plug-in will use to make API calls, granting the plug-in permission to call that resource as an allowed host.  Lastly, we set a default model, which is passed as a configuration value to the plug-in.  
+Let's walk through a sample configuration as defined below. We're importing a plug-in named `openai` whose Wasm source is loaded from a remote URL.  A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plug-in will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plug-in.  The base URL the plug-in will use to make API calls to the OpenAI API is provided, granting the plug-in permission to call that resource as an allowed host.  Lastly, we set a default model, which is passed as a configuration value to the plug-in.  
 
 ```yml
 completion-plugins:
@@ -81,7 +81,7 @@ completion-plugins:
 ...
 ```
 
-More comprehensively, here is the full list of available plug-in configuration values:
+Here is the full list of available plug-in configuration values:
 
 - `name`: unique name for the plugin.
 - `source`: wasm file location, can be a file path or http location.
