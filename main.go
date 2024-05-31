@@ -121,7 +121,7 @@ func generatePrompt(args []string, raw bool) string {
 	var prompt string
 	stdInStats, _ := os.Stdin.Stat()
 
-	if stdInStats.Size() > 0 {
+	if (stdInStats.Mode() & os.ModeCharDevice) == 0 {
 		reader := bufio.NewReader(os.Stdin)
 		s, _ := io.ReadAll(reader)
 		prompt += string(s)
