@@ -4,6 +4,10 @@ import (
 	"testing"
 )
 
+func shouldSkip() bool {
+    return os.Getenv("SKIP_CHAT_RESPONSE_TESTS") == "true"
+}
+
 func TestBadConfigFilePath(t *testing.T) {
 	t.Parallel()
 
@@ -59,6 +63,9 @@ func TestGetModels(t *testing.T) {
 
 func TestGetResponse(t *testing.T) {
 	t.Parallel()
+	if shouldSkip() {
+		t.Skip("Skipping this test")
+	}
 
 	pluginCfg, err := getPluginConfig("openai", configPath)
 	if err != nil {
