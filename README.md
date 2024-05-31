@@ -56,28 +56,43 @@ go install github.com/bradyjoslin/assembllm
 
 ## Plugins
 
-Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.
+Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.  `assembllm` acts as a [host application](https://extism.org/docs/concepts/host-sdk) that uses the Extism SDK to and is responsible for handling the user experience and interacting with the LLM chat completion plug-ins which use Extism's [Plug-in Development Kits (PDKs)](https://extism.org/docs/concepts/pdk).
 
 ### Sample Plugins
 
-Sample plugins are provided in the `/plugins` directory and show how to build plug-ins using Rust, TypeScript, Go, and C#.   These samples are also used in the default configuration.
+Sample plugins are provided in the `/plugins` directory implemented using Rust, TypeScript, Go, and C#.   These samples are implemented in the default configuration on install.
 
 ### Plug-in Configuration
 
-`assembllm` chat completion plugins are defined in `config.yaml` that is stored in `~/.assembllm`.  Each plugin is defined by:
+`assembllm` chat completion plugins are defined in `config.yaml` that is stored in `~/.assembllm`.  The first plug-in in the configuration file will be used as the default.
 
-- `name`: unique name for the plugin
-- `source`: a reference to plug-in wasm file.  Can be a file path or http location.
+The provided plug-in configuration is used to define an [Extism manifest](https://extism.org/docs/concepts/manifest/) that `assembllm` uses to load the Wasm module, grant it the relevant permissions, and provide configuration data.  Wasm is sandboxed by default, unable to access the filesystem, make network calls, or access system information like environment variables unless explicitly granted by the host.
+
+In this sample configuration file we're importing a plug-in named `openai` whose Wasm source is loaded from a remote URL.  A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plug-in will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plug-in.  The base URL the plug-in will use to make API calls, granting the plug-in permission to call that resource as an allowed host.  Lastly, we set a default model, which is passed as a configuration value to the plug-in.  
+
+```yml
+completion-plugins:
+  - name: openai
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7.wasm
+    hash: 114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7
+    apiKey: OPENAI_API_KEY
+    url: api.openai.com
+    model: 4o
+...
+```
+
+More comprehensively, here is the full list of available plug-in configuration values:
+
+- `name`: unique name for the plugin.
+- `source`: wasm file location, can be a file path or http location.
 - `hash`: sha 256-based hash of the wasm file for validation.  Optional, but recommended.
-- `apiKey`: environment variable name containing the API Key for the plugin's service
+- `apiKey`: environment variable name containing the API Key for the service the plug-in uses
 - `accountId`: environment variable name containing the AccountID for the plugin's service.  Optional, used by some services like [Cloudflare](https://developers.cloudflare.com/workers-ai/get-started/rest-api/#1-get-api-token-and-account-id).
-- `url`: the base url for the service used by the plug-in.  By default the plug-ins cannot make http calls, this grants access to the plug-in to call the API resource.
-- `model`: default model to use. Optional.
-- `wasi`: whether or not the plugin requires WASI
+- `url`: the base url for the service used by the plug-in. 
+- `model`: default model to use.
+- `wasi`: whether or not the plugin requires WASI.
 
 ### Plug-in Architecture
-
-`assembllm` acts as a [host application](https://extism.org/docs/concepts/host-sdk) that uses the Extism SDK to and is responsible for handling the user experience and interacting with the LLM chat completion plug-ins defined using Extism's [Plug-in Development Kits (PDKs)](https://extism.org/docs/concepts/pdk).
 
 To be compatible with `assembllm`, each plugin must expose two functions via the PDK:
 
