@@ -50,7 +50,7 @@ Role set the system prompt to influence the style and constraints of the prompt 
 
 Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.
 
-## Sample Plugins
+### Sample Plugins
 
 Sample plugins are provided in the `/plugins` directory and show how to build plug-ins using Rust, TypeScript, Go, and C#.   These samples are also used in the default configuration.
 
