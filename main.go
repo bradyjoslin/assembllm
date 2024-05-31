@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	_ "embed"
 	"fmt"
 	"io"
@@ -38,7 +39,7 @@ var (
 
 	configPath string
 
-	logLevel = extism.LogLevelError
+	logLevel = extism.LogLevelOff
 
 	appName = filepath.Base(os.Args[0])
 	rootCmd = &cobra.Command{
@@ -184,25 +185,24 @@ func runCommand(cmd *cobra.Command, args []string) error {
 
 	prompt := generatePrompt(args, appCfg.Raw)
 
+	ctx, cancel := context.WithCancel(context.Background())
+
 	var res string
-	errCh := make(chan error)
 
 	action := func() {
 		res, err = pluginCfg.generateResponse(prompt, appCfg.Raw)
-		if err != nil {
-			errCh <- err
-		}
+		cancel()
 	}
 
-	_ = spinner.New().Title("Generating...").Action(action).Run()
+	go action()
+	_ = spinner.New().Title("Generating...").Context(ctx).Run()
 
-	select {
-	case err := <-errCh:
+	if err != nil {
 		return err
-	default:
-		fmt.Print(res)
-		return nil
 	}
+
+	fmt.Print(res)
+	return nil
 }
 
 func main() {
