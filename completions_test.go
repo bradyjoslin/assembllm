@@ -64,6 +64,7 @@ func TestGetModels(t *testing.T) {
 
 func TestGetResponse(t *testing.T) {
 	t.Parallel()
+	
 	if shouldSkip() {
 		t.Skip("Skipping this test")
 	}
