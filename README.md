@@ -50,9 +50,15 @@ Use roles to set the system prompt that influences the style and constraints of 
 ## Installing
 
 ```bash
+# install with brew
+brew tap bradyjoslin/assembllm
+brew install bradyjoslin/assembllm/assembllm
+
 # install with Go
 go install github.com/bradyjoslin/assembllm
 ```
+
+Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assembllm/releases).
 
 ## Plugins
 
