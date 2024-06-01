@@ -14,11 +14,12 @@ require (
 	github.com/charmbracelet/bubbletea v0.26.3 // indirect
 	github.com/charmbracelet/lipgloss v0.11.0 // indirect
 	github.com/charmbracelet/x/ansi v0.1.1 // indirect
-	github.com/charmbracelet/x/exp/term v0.0.0-20240506152644-8135bef4e495 // indirect
+	github.com/charmbracelet/x/exp/strings v0.0.0-20240524151031-ff83003bf67a // indirect
 	github.com/charmbracelet/x/input v0.1.1 // indirect
 	github.com/charmbracelet/x/term v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.1.2 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -40,13 +41,12 @@ require (
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
-	golang.org/x/term v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
 )
 
 require (
 	github.com/charmbracelet/glamour v0.7.0
-	github.com/charmbracelet/huh v0.3.0
+	github.com/charmbracelet/huh v0.4.2
 	github.com/charmbracelet/huh/spinner v0.0.0-20240529143420-2ae64435bd5d
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/spf13/cobra v1.8.0

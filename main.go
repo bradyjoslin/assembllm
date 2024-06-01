@@ -12,6 +12,7 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
+	"github.com/charmbracelet/lipgloss"
 	extism "github.com/extism/go-sdk"
 	"github.com/spf13/cobra"
 )
@@ -71,6 +72,7 @@ func chooseModel(pluginCfg CompletionPluginConfig) (string, error) {
 		Title("Choose a model:").
 		Options(opts...).
 		Value(&model).
+		WithTheme(huh.ThemeCharm()).
 		Run()
 
 	return model, nil
@@ -134,8 +136,9 @@ func generatePrompt(args []string, raw bool) string {
 
 	if prompt == "" {
 		huh.NewInput().
-			Title("Enter a chat completions prompt:").
+			Title("What would you like to ask or discuss?").
 			Value(&prompt).
+			WithTheme(huh.ThemeCharm()).
 			Run()
 	}
 
@@ -193,7 +196,7 @@ func runCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	go action()
-	_ = spinner.New().Title("Generating...").Context(ctx).Run()
+	_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Context(ctx).Run()
 
 	if err != nil {
 		return err
@@ -205,11 +208,11 @@ func runCommand(cmd *cobra.Command, args []string) error {
 
 func main() {
 	initializeFlags()
-	
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	
+
 	os.Exit(0)
 }
