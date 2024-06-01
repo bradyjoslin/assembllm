@@ -16,6 +16,9 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: 386
     goos:
       - linux
       - windows
