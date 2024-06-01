@@ -91,25 +91,30 @@ public class Program
     public static int Completion()
     {
         string prompt = Pdk.GetInputString();
-        var (model, err) = GetModel();
-        if (err != null)
+        var (model, model_error) = GetModel();
+        if (model_error != null)
         {
-            Pdk.Log(LogLevel.Error, $"Error getting model: {err.Message}");
+            Pdk.Log(LogLevel.Error, $"Error getting model: {model_error.Message}");
+            Pdk.SetError(model_error.Message);
             return 1;
         }
 
-        var (temperature, err2) = GetTemperature();
-        if (err2 != null)
+        var (temperature, temperature_error) = GetTemperature();
+        if (temperature_error != null)
         {
-            Pdk.Log(LogLevel.Error, $"Error getting temperature: {err2.Message}");
+            Pdk.Log(LogLevel.Error, $"Error getting temperature: {temperature_error.Message}");
+            Pdk.SetError(temperature_error.Message);
             return 1;
         }
 
-        string role = "Completion";
+        Pdk.TryGetConfig("role", out string role);
+
         Pdk.TryGetConfig("api_key", out string apiKey);
         if (apiKey == "")
         {
-            Pdk.Log(LogLevel.Error, $"API key is reuqired");
+            Pdk.Log(LogLevel.Error, $"API key is required");
+            Pdk.SetError("API key is required");
+            return 1;
         }
 
         CompletionRequest completionRequest = new CompletionRequest
@@ -177,7 +182,7 @@ public class Program
 
     public static (double, Exception) GetTemperature()
     {
-        if (Pdk.TryGetConfig("temperature", out string temperature))
+        if (!Pdk.TryGetConfig("temperature", out string temperature))
         {
             Pdk.Log(LogLevel.Info, "Temperature not set, using default value");
             temperature = "0.7";
@@ -186,7 +191,7 @@ public class Program
         if (!double.TryParse(temperature, out double temperatureFloat))
         {
             Pdk.Log(LogLevel.Info, "No temp provided, setting default");
-            temperatureFloat = 0.7;
+            return (0, new FormatException("Temperature must be a float"));
         }
         if (temperatureFloat < 0.0 || temperatureFloat > 1.0)
         {
