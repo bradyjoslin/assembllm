@@ -40,7 +40,7 @@ Build complex prompts by piping from stdin:
 
 ![Curl Demo](./assets/piping_curl_demo.gif)
 
-Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/llm_chaining/llm_chaining/research_example_output.md).
+Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
 
 ```sh
 #!/bin/bash
