@@ -48,7 +48,7 @@ Use roles to set the system prompt that influences the style and constraints of 
 
 ![Curl Demo](./assets/roles_demo.gif)
 
-Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. Sample output running this example can be found [here](./research_example_output.md).
+Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/llm_chaining/llm_chaining/research_example_output.md).
 
 ```sh
 #!/bin/bash
