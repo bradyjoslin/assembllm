@@ -4,6 +4,7 @@
 
 - **LLM Chat Completions**: Supports building prompts piped from stdin and/or provided as an input argument.
 - **Multi-AI Support**: Comes with built-in support for [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation).
+- **LLM Agent Chaining**: pass the output of one LLM as input to another, in a sequence or "pipeline", to perform complex tasks.
 - **Plug-in Architecture**: Easily extend support for other LLMs. Plug-ins can be added via configuration without the need to recompile `assembllm`.
 - **Cross-language support**: Create custom plugins in a variety of languages, including JavaScript, Rust, Go, C#, F#, AssemblyScript, Haskell, Zig, and C.
 
@@ -46,6 +47,23 @@ Build complex prompts by piping from stdin:
 Use roles to set the system prompt that influences the style and constraints of the prompt response:
 
 ![Curl Demo](./assets/roles_demo.gif)
+
+Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. Sample output running this example can be found [here](./research_example_output.md).
+
+```sh
+#!/bin/bash
+
+TOPIC="ten bullets summarizing extism plug-in systems with wasm"
+RESEARCHER="you are a technical research assistant"
+ANALYSIS="analyze these capabilities against the broader backdrop of webassembly."
+WRITER="you are a technical writer specializing in trends, skilled at helping developers understand the practical use of new technology described from first principles"
+BLOG_POST="write a blog post on the provided research, avoid bullets, use prose and include section headers"
+
+assembllm -p perplexity "$TOPIC" \
+| assembllm -r "$RESEARCHER" "$ANALYSIS" \
+| assembllm --raw -r "$WRITER" "$BLOG_POST" \
+| tee research_example_output.md
+```
 
 ## Installing
 
@@ -166,4 +184,3 @@ The plug-in is also provided configuration data from the `assembllm` host:
 - `model`: LLM model to use for completions response
 - `temperature`: temperature value for the completion response
 - `role`: prompt to use as the system message for the prompt
-
