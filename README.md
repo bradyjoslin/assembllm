@@ -69,7 +69,7 @@ tasks:
 Then execute the tasks by using the `tasks` command:
 
 ```sh
- assembllm tasks ./tasks/sample_task.yaml
+ assembllm tasks ./llm_chaining/research_example_task.yaml
 ```
 
 Alternatively, you can chain LLM responses using bash scripts:
