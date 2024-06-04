@@ -16,6 +16,10 @@ A WASM plug-in based CLI for AI chat completions
 
 Usage:
   assembllm [prompt] [flags]
+  assembllm [command]
+
+Available Commands:
+  tasks       LLM prompt chaining for complex tasks.
 
 Flags:
   -p, --plugin string        The name of the plugin to use (default "openai")
@@ -26,6 +30,8 @@ Flags:
       --raw                  Raw output without formatting
   -v, --version              Print the version
   -h, --help                 help for assembllm
+
+Use "assembllm [command] --help" for more information about a command.
 ```
 
 Quickly get completion responses using default plug-in and model:
@@ -40,7 +46,33 @@ Build complex prompts by piping from stdin:
 
 ![Curl Demo](./assets/piping_curl_demo.gif)
 
-Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
+Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. 
+
+```yaml
+# ./llm_chaining/research_example_task.yaml
+tasks:
+  - name: topic
+    plugin: perplexity
+    prompt: "ten bullets summarizing extism plug-in systems with wasm"
+  - name: researcher
+    plugin: openai
+    role: "you are a technical research assistant"
+    prompt: "ten bullets summarizing extism plug-in systems with wasm"
+  - name: writer
+    plugin: openai
+    role: "you are a technical writer"
+    prompt: "write a blog post on the provided research, avoid bullets, use prose and include section headers"
+    temperature: 0.5
+    model: 4o
+```
+
+Then execute the tasks by using the `tasks` command:
+
+```sh
+ assembllm tasks ./tasks/sample_task.yaml
+```
+
+Alternatively, you can chain LLM responses using bash scripts:
 
 ```sh
 #!/bin/bash
@@ -56,6 +88,8 @@ assembllm -p perplexity "$TOPIC" \
 | assembllm --raw -r "$WRITER" "$BLOG_POST" \
 | tee research_example_output.md
 ```
+
+Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/llm_chaining/llm_chaining/research_example_output.md).
 
 ## Installing
 

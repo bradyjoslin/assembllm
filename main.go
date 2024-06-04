@@ -15,6 +15,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	extism "github.com/extism/go-sdk"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 type AppConfig struct {
@@ -25,11 +26,25 @@ type AppConfig struct {
 	Role          string
 	Raw           bool
 	Version       bool
+	TasksPath     string
+}
+
+type Tasks struct {
+	Tasks []Task `yaml:"tasks"`
+}
+
+type Task struct {
+	Name        string `yaml:"name"`
+	Prompt      string `yaml:"prompt"`
+	Role        string `yaml:"role"`
+	Plugin      string `yaml:"plugin"`
+	Model       string `yaml:"model"`
+	Temperature string `yaml:"temperature"`
 }
 
 const (
 	configFileName = "config.yaml"
-	version        = "0.1.4"
+	version        = "0.1.5"
 )
 
 var (
@@ -46,9 +61,33 @@ var (
 	rootCmd = &cobra.Command{
 		Use:           appName + " [prompt]",
 		Short:         "A WASM plug-in based CLI for AI chat completions",
+		Args:          cobra.ArbitraryArgs,
 		RunE:          runCommand,
 		SilenceUsage:  true,
 		SilenceErrors: true,
+	}
+
+	tasksCmd = &cobra.Command{
+		Use:   "tasks",
+		Short: "LLM prompt chaining for complex tasks.",
+		Long:  "Provide filepath to yaml file containing tasks to run.",
+		Args:  cobra.MaximumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				huh.NewFilePicker().
+					Title("Select a yaml file containing the tasks to run:").
+					AllowedTypes([]string{".yaml", "yml"}).
+					Value(&appCfg.TasksPath).
+					Picking(true).
+					Height(10).
+					Run()
+			} else {
+				appCfg.TasksPath = args[0]
+			}
+
+			handleTasks()
+			return nil
+		},
 	}
 )
 
@@ -105,6 +144,10 @@ func init() {
 
 // Initializes the flags for the root command
 func initializeFlags() {
+	rootCmd.AddCommand(tasksCmd)
+	rootCmd.CompletionOptions.HiddenDefaultCmd = true
+	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
+
 	flags := rootCmd.Flags()
 	flags.StringVarP(&appCfg.Name, "plugin", "p", "openai", "The name of the plugin to use")
 	flags.StringVarP(&appCfg.Model, "model", "m", "", "The name of the model to use")
@@ -164,6 +207,62 @@ func overridePluginConfigWithUserFlags(appConfig AppConfig, pluginConfig Complet
 	}
 
 	return pluginConfig
+}
+
+func generateResponseForTasks(tasks Tasks) (string, error) {
+	var out string
+
+	for _, task := range tasks.Tasks {
+		pluginCfg, err := getPluginConfig(task.Plugin, configPath)
+		if err != nil {
+			return "", err
+		}
+		if task.Temperature != "" {
+			pluginCfg.Temperature = task.Temperature
+		}
+
+		pluginCfg.Role = task.Role
+		prompt := out + task.Prompt
+
+		res, err := pluginCfg.generateResponse(prompt, appCfg.Raw)
+		if err != nil {
+			return "", err
+		}
+
+		out = res
+	}
+
+	return out, nil
+}
+
+func handleTasks() error {
+	tasksCfg, err := os.ReadFile(appCfg.TasksPath)
+	if err != nil {
+		return err
+	}
+
+	var tasks Tasks
+	err = yaml.Unmarshal(tasksCfg, &tasks)
+	if err != nil {
+		return err
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	var res string
+	action := func() {
+		res, err = generateResponseForTasks(tasks)
+		cancel()
+	}
+
+	go action()
+	_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Context(ctx).Run()
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Print(res)
+	return nil
 }
 
 func runCommand(cmd *cobra.Command, args []string) error {
