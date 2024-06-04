@@ -46,7 +46,7 @@ Build complex prompts by piping from stdin:
 
 ![Curl Demo](./assets/piping_curl_demo.gif)
 
-Combine multiple agents for enhanced results. In this example, first generate a topic, then conduct research and analysis, and finally compose a blog post. 
+Combine multiple agents into tasks with the results of each task feeding into the next. In this example, first generate a topic, then conduct research and analysis on that topic, and finally compose a blog post based on the research. 
 
 ```yaml
 # ./llm_chaining/research_example_task.yaml
@@ -57,7 +57,7 @@ tasks:
   - name: researcher
     plugin: openai
     role: "you are a technical research assistant"
-    prompt: "ten bullets summarizing extism plug-in systems with wasm"
+    prompt: "analyze these capabilities against the broader backdrop of webassembly."
   - name: writer
     plugin: openai
     role: "you are a technical writer"

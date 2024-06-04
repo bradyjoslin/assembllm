@@ -5,7 +5,7 @@ tasks:
   - name: researcher
     plugin: openai
     role: "you are a technical research assistant"
-    prompt: "ten bullets summarizing extism plug-in systems with wasm"
+    prompt: "analyze these capabilities against the broader backdrop of webassembly."
   - name: writer
     plugin: openai
     role: "you are a technical writer"
