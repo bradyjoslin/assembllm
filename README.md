@@ -89,7 +89,7 @@ assembllm -p perplexity "$TOPIC" \
 | tee research_example_output.md
 ```
 
-Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/llm_chaining/llm_chaining/research_example_output.md).
+Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
 
 ## Installing
 
