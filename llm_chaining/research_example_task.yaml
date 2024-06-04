@@ -1,0 +1,14 @@
+tasks:
+  - name: topic
+    plugin: perplexity
+    prompt: "ten bullets summarizing extism plug-in systems with wasm"
+  - name: researcher
+    plugin: openai
+    role: "you are a technical research assistant"
+    prompt: "ten bullets summarizing extism plug-in systems with wasm"
+  - name: writer
+    plugin: openai
+    role: "you are a technical writer"
+    prompt: "write a blog post on the provided research, avoid bullets, use prose and include section headers"
+    temperature: 0.5
+    model: 4o
