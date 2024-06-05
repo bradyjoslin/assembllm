@@ -23,8 +23,9 @@ Available Commands:
 
 Flags:
   -p, --plugin string        The name of the plugin to use (default "openai")
+  -P, --choose-plugin        Choose the plugin to use
   -m, --model string         The name of the model to use
-  -c, --choose-model         Choose the model to use
+  -M, --choose-model         Choose the model to use
   -t, --temperature string   The temperature to use
   -r, --role string          The role to use
       --raw                  Raw output without formatting

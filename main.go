@@ -22,6 +22,7 @@ type AppConfig struct {
 	Name          string
 	Model         string
 	ChooseAIModel bool
+	ChoosePlugin  bool
 	Temperature   string
 	Role          string
 	Raw           bool
@@ -150,8 +151,12 @@ func initializeFlags() {
 
 	flags := rootCmd.Flags()
 	flags.StringVarP(&appCfg.Name, "plugin", "p", "openai", "The name of the plugin to use")
+	flags.BoolVarP(&appCfg.ChoosePlugin, "choose-plugin", "P", false, "Choose the plugin to use")
 	flags.StringVarP(&appCfg.Model, "model", "m", "", "The name of the model to use")
-	flags.BoolVarP(&appCfg.ChooseAIModel, "choose-model", "c", false, "Choose the model to use")
+	flags.BoolVarP(&appCfg.ChooseAIModel, "choose-model", "M", false, "Choose the model to use")
+	flags.BoolVarP(&appCfg.ChooseAIModel, "choose-model(deprecated)", "c", false, "Choose the model to use")
+	flags.MarkHidden("choose-model(deprecated)")
+	flags.MarkShorthandDeprecated("choose-model(deprecated)", "use -M instead")
 	flags.StringVarP(&appCfg.Temperature, "temperature", "t", "", "The temperature to use")
 	flags.StringVarP(&appCfg.Role, "role", "r", "", "The role to use")
 	flags.BoolVarP(&appCfg.Raw, "raw", "", false, "Raw output without formatting")
@@ -265,10 +270,43 @@ func handleTasks() error {
 	return nil
 }
 
+func choosePlugin() (string, error) {
+	pluginCfgs, err := getAvailablePlugins(configPath)
+	if err != nil {
+		return "", err
+	}
+
+	var opts []huh.Option[string]
+	for _, plugin := range pluginCfgs.Plugins {
+		opts = append(opts, huh.Option[string]{
+			Key:   plugin.Name,
+			Value: plugin.Name,
+		})
+	}
+
+	var plugin string
+	huh.NewSelect[string]().
+		Title("Choose a plugin:").
+		Options(opts...).
+		Value(&plugin).
+		WithTheme(huh.ThemeCharm()).
+		Run()
+
+	return plugin, nil
+}
+
 func runCommand(cmd *cobra.Command, args []string) error {
 	if appCfg.Version {
 		fmt.Println(appName + " " + version)
 		return nil
+	}
+
+	if appCfg.ChoosePlugin {
+		pluginName, err := choosePlugin()
+		if err != nil {
+			return err
+		}
+		appCfg.Name = pluginName
 	}
 
 	pluginCfg, err := getPluginConfig(appCfg.Name, configPath)
