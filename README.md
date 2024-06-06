@@ -60,7 +60,7 @@ Build complex prompts by piping from stdin:
 
 ## LLM Chaining
 
-Combine multiple agents into tasks with the results of each task feeding into the next. In this example, we use perplexity to generate the initial ideas for our topic.  Then conduct research and analysis on that output by first augmenting the results with information about Extism's GitHub repos using a `pre_script`, which calls a REST API and transforms the results to a more consice set of JSON, reducing LLM token usage.  Then we compose a blog post based on the research output and write the blog post to a local file using a `post_script`.  Finally, we read the blog post from the local file and generates a summary to stdout.
+Combine multiple LLMs using the `tasks` command, where the the results of each task feeds into the next. Let's walk through a sample task configuration.  At minimum each task needs a `name`, `plugin`, and `prompt`.  Here we use perplexity to generate the initial ideas for our topic.  Then conduct research and analysis on that output by first augmenting the results with information about Extism's GitHub repos using a `pre_script`, which calls a REST API and transforms the results to a more consice set of JSON, reducing LLM token usage.  Then we compose a blog post based on the research output and write the blog post to a local file using a `post_script`.  Finally, we read the blog post from the local file and generates a summary to stdout.
 
 ```yaml
 tasks:
