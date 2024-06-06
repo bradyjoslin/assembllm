@@ -25,6 +25,8 @@ require (
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/itchyny/gojq v0.12.13 // indirect
+	github.com/itchyny/timefmt-go v0.1.5 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
@@ -44,12 +46,15 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
+	mvdan.cc/sh/v3 v3.7.0 // indirect
 )
 
 require (
+	github.com/bitfield/script v0.22.1
 	github.com/charmbracelet/glamour v0.7.0
 	github.com/charmbracelet/huh v0.4.2
 	github.com/charmbracelet/huh/spinner v0.0.0-20240529143420-2ae64435bd5d
+	github.com/expr-lang/expr v1.16.9
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/spf13/cobra v1.8.0
 	github.com/tetratelabs/wazero v1.3.0 // indirect

@@ -7,12 +7,16 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/bitfield/script"
+	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/expr-lang/expr"
 	extism "github.com/extism/go-sdk"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -41,11 +45,13 @@ type Task struct {
 	Plugin      string `yaml:"plugin"`
 	Model       string `yaml:"model"`
 	Temperature string `yaml:"temperature"`
+	PreScript   string `yaml:"pre_script"`
+	PostScript  string `yaml:"post_script"`
 }
 
 const (
 	configFileName = "config.yaml"
-	version        = "0.1.6"
+	version        = "0.1.7"
 )
 
 var (
@@ -214,10 +220,70 @@ func overridePluginConfigWithUserFlags(appConfig AppConfig, pluginConfig Complet
 	return pluginConfig
 }
 
+func httpGet(url string) (string, error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
+}
+
+func appendFile(content string, path string) (int64, error) {
+	b, err := script.Echo(content).AppendFile(path)
+	if err != nil {
+		return 0, err
+	}
+	return b, nil
+}
+
+func readfile(path string) (string, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
+
+func runExpr(input string, expression string) (string, error) {
+	env := map[string]interface{}{
+		"input":      input,
+		"Get":        httpGet,
+		"AppendFile": appendFile,
+		"ReadFile":   readfile,
+	}
+
+	program, err := expr.Compile(expression, expr.Env(env))
+	if err != nil {
+		return "", err
+	}
+
+	output, err := expr.Run(program, env)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%v", output), nil
+}
+
 func generateResponseForTasks(tasks Tasks) (string, error) {
 	var out string
 
 	for _, task := range tasks.Tasks {
+		if task.PreScript != "" {
+			s, err := runExpr(task.Prompt, task.PreScript)
+			if err != nil {
+				return "", err
+			}
+			task.Prompt = task.Prompt + s
+		}
+
 		pluginCfg, err := getPluginConfig(task.Plugin, configPath)
 		if err != nil {
 			return "", err
@@ -229,14 +295,25 @@ func generateResponseForTasks(tasks Tasks) (string, error) {
 		pluginCfg.Role = task.Role
 		prompt := out + task.Prompt
 
-		res, err := pluginCfg.generateResponse(prompt, appCfg.Raw)
+		res, err := pluginCfg.generateResponse(prompt, true)
 		if err != nil {
 			return "", err
+		}
+
+		if task.PostScript != "" {
+			s, err := runExpr(res, task.PostScript)
+			if err != nil {
+				return "", err
+			}
+			res = s
 		}
 
 		out = res
 	}
 
+	if !appCfg.Raw {
+		return glamour.Render(out, "dark")
+	}
 	return out, nil
 }
 
@@ -256,6 +333,11 @@ func handleTasks() error {
 	var res string
 	action := func() {
 		res, err = generateResponseForTasks(tasks)
+		if err != nil {
+			cancel()
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		cancel()
 	}
 
