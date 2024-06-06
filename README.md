@@ -104,9 +104,9 @@ Then run this task using `assebmllm`:
  assembllm tasks research_example_task.yaml
 ```
 
-The results procuded this detailed blog post to [research_example_output.md](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
+The result of running was this detailed blog post [research_example_output.md](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
 
-And printed this concise summary to stdout:
+And this concise summary printed to stdout:
 
 ```md
   1. Language Agnosticism and Flexibility: Extism supports multiple
