@@ -8,6 +8,17 @@
 - **Plug-in Architecture**: Easily extend support for other LLMs. Plug-ins can be added via configuration without the need to recompile `assembllm`.
 - **Cross-language support**: Create custom plugins in a variety of languages, including JavaScript, Rust, Go, C#, F#, AssemblyScript, Haskell, Zig, and C.
 
+## Installing
+
+```bash
+# install with brew
+brew tap bradyjoslin/assembllm
+brew install bradyjoslin/assembllm/assembllm
+
+# install with Go
+go install github.com/bradyjoslin/assembllm
+```
+
 ## Usage
 
 ```txt
@@ -47,16 +58,28 @@ Build complex prompts by piping from stdin:
 
 ![Curl Demo](./assets/piping_curl_demo.gif)
 
-Combine multiple agents into tasks with the results of each task feeding into the next. In this example, first generate a topic, then conduct research and analysis on that topic, and finally compose a blog post based on the research. 
+## LLM Chaining
+
+Combine multiple agents into tasks with the results of each task feeding into the next. In this example, we use perplexity to generate the initial ideas for our topic.  Then conduct research and analysis on that output by first augmenting the results with information about Extism's GitHub repos using a `pre_script`, which calls a REST API and transforms the results to a more consice set of JSON, reducing LLM token usage.  Then we compose a blog post based on the research output and write the blog post to a local file using a `post_script`.  Finally, we read the blog post from the local file and generates a summary to stdout.
 
 ```yaml
-# ./llm_chaining/research_example_task.yaml
 tasks:
   - name: topic
     plugin: perplexity
     prompt: "ten bullets summarizing extism plug-in systems with wasm"
   - name: researcher
     plugin: openai
+    pre_script: >
+      (Get('https://api.github.com/orgs/extism/repos') | fromJSON()) 
+      | map([
+          {
+            'name': .name, 
+            'description': .description, 
+            'stars': .stargazers_count, 
+            'url': .html_url
+          }
+        ]) 
+      | toJSON()
     role: "you are a technical research assistant"
     prompt: "analyze these capabilities against the broader backdrop of webassembly."
   - name: writer
@@ -65,13 +88,78 @@ tasks:
     prompt: "write a blog post on the provided research, avoid bullets, use prose and include section headers"
     temperature: 0.5
     model: 4o
+    post_script: |
+      AppendFile(input, "research_example_output.md")
+  - name: reader
+    plugin: openai
+    pre_script: |
+      ReadFile("research_example_output.md")
+    role: "you are a technical reader"
+    prompt: "summarize the blog post in 5 bullets"
 ```
 
-Then execute the tasks by using the `tasks` command:
+Then run this task using `assebmllm`:
 
 ```sh
- assembllm tasks ./llm_chaining/research_example_task.yaml
+ assembllm tasks research_example_task.yaml
 ```
+
+The results procuded this detailed blog post to [research_example_output.md](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
+
+And printed this concise summary to stdout:
+
+```md
+  1. Language Agnosticism and Flexibility: Extism supports multiple
+  programming languages through various Plug-in Development Kits (PDKs),
+  enabling developers to use their preferred languages and existing codebases,
+  consistent with the language-agnostic goals of the WASM ecosystem.
+
+  2. Security and Sandboxing: Extism ensures the secure execution of untrusted
+  code by leveraging WebAssembly's sandboxing and memory protection features,
+  providing an additional layer of security for host applications.
+
+  3. Host Functions and Extensibility: Extism allows plug-ins to import
+  functions from the host application, facilitating powerful integrations such
+  as database access and API usage, enhancing the functionality and
+  flexibility of software.
+
+  4. Use Cases and Practical Applications: Extism's versatility is showcased
+  in various projects, including Function-as-a-Service (FaaS) platforms and web
+  applications, aligning well with broader WASM trends in cloud computing,
+  edge computing, IoT, and browser-based applications.
+
+  5. Component Model and Future Roadmap: Extism is committed to evolving with
+  the WASM ecosystem, actively tracking and planning the implementation of the
+  Component Model to improve module interoperability and ease of use, ensuring
+  it remains a cutting-edge tool for developers.
+```
+
+### Pre- and Post-Scripts
+
+Create `pre_script` and `post_script` expressions with [Expr](https://expr-lang.org/), a Go-centric expression language designed to deliver dynamic configurations.  See the full language definition [here](https://expr-lang.org/docs/language-definition).  All expressions result in a single value.  
+
+In addition to all of the functionality provided by Expr, `assebmllm` provides these additional functions that you can use in your expressions:
+
+- **Get**: perform http Get calls within functions
+- **ReadFile**: read files from your local filesystem
+- **AppendFile**: appends content to file, creating if it doesn't exist
+
+In addition to these functions an `input` variable is provided with the contents of the prompt at that stage of the chain.
+
+A `pre_script` is run before sending the prompt to the LLM.  The output of a `pre_script` is appended to the prompt at that stage of the chain.
+
+A `post_script` is run after sending the prompt to the LLM and the `input` value availabe in the expression is the LLM results.  Unlike a `pre_script`, `post_script` the expression's output *replaces* instead of appends to the prompt at that stage of the chain.  If you would like to pass the prompt along from a `post_script`, you must do so explicitly.  For example, if you'd like to write the current prompt to a file and also pass it to the next LLM: 
+
+```yml
+...
+  - name: file_writer
+    post_script: |
+      let b = AppendFile(input, "research_example_output.md");
+      input
+...
+```
+
+### Chaining with Bash Scripts
 
 Alternatively, you can chain LLM responses using bash scripts:
 
@@ -88,19 +176,6 @@ assembllm -p perplexity "$TOPIC" \
 | assembllm -r "$RESEARCHER" "$ANALYSIS" \
 | assembllm --raw -r "$WRITER" "$BLOG_POST" \
 | tee research_example_output.md
-```
-
-Sample output running this example can be found [here](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
-
-## Installing
-
-```bash
-# install with brew
-brew tap bradyjoslin/assembllm
-brew install bradyjoslin/assembllm/assembllm
-
-# install with Go
-go install github.com/bradyjoslin/assembllm
 ```
 
 Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assembllm/releases).

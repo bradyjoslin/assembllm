@@ -4,6 +4,17 @@ tasks:
     prompt: "ten bullets summarizing extism plug-in systems with wasm"
   - name: researcher
     plugin: openai
+    pre_script: >
+      (Get('https://api.github.com/orgs/extism/repos') | fromJSON()) 
+      | map([
+          {
+            'name': .name, 
+            'description': .description, 
+            'stars': .stargazers_count, 
+            'url': .html_url
+          }
+        ]) 
+      | toJSON()
     role: "you are a technical research assistant"
     prompt: "analyze these capabilities against the broader backdrop of webassembly."
   - name: writer
@@ -12,3 +23,11 @@ tasks:
     prompt: "write a blog post on the provided research, avoid bullets, use prose and include section headers"
     temperature: 0.5
     model: 4o
+    post_script: |
+      AppendFile(input, "research_example_output.md")
+  - name: reader
+    plugin: openai
+    pre_script: |
+      ReadFile("research_example_output.md")
+    role: "you are a technical reader"
+    prompt: "summarize the blog post in 5 bullets"
