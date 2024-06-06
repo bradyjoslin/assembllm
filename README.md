@@ -19,6 +19,8 @@ brew install bradyjoslin/assembllm/assembllm
 go install github.com/bradyjoslin/assembllm
 ```
 
+Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assembllm/releases).
+
 ## Usage
 
 ```txt
@@ -177,8 +179,6 @@ assembllm -p perplexity "$TOPIC" \
 | assembllm --raw -r "$WRITER" "$BLOG_POST" \
 | tee research_example_output.md
 ```
-
-Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assembllm/releases).
 
 ## Plugins
 
