@@ -1,0 +1,9 @@
+tasks:
+  - name: topic
+    plugin: openai
+    prompt: "tell me a joke"
+    post_script: |
+      let wasm = "https://github.com/extism/plugins/releases/latest/download/count_vowels.wasm";
+      let vowelCount = Extism(wasm, "count_vowels", input);
+      let vowels = (vowelCount | fromJSON()).count | string();
+      input + "\n\n vowels: " + vowels

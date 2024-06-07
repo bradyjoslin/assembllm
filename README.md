@@ -145,6 +145,7 @@ In addition to all of the functionality provided by Expr, `assebmllm` offers the
 - **Get**: perform http GET calls within functions
 - **ReadFile**: read files from your local filesystem
 - **AppendFile**: appends content to file, creating if it doesn't exist
+- **Extism**: calls a wasm function, source can be a file or url
 
 In addition to these functions, an `input` variable is provided with the contents of the prompt at that stage of the chain.
 
@@ -159,6 +160,32 @@ A `post_script` is run after sending the prompt to the LLM, therefore the `input
       let b = AppendFile(input, "research_example_output.md");
       input
 ...
+```
+
+Here's an example of calling wasm using the `Extism` function within expressions:
+
+```sh
+tasks:
+  - name: topic
+    plugin: openai
+    prompt: "tell me a joke"
+    post_script: |
+      let wasm = "https://github.com/extism/plugins/releases/latest/download/count_vowels.wasm";
+      let vowelCount = Extism(wasm, "count_vowels", input);
+      let vowels = (vowelCount | fromJSON()).count | string();
+      input + "\n\n vowels: " + vowels
+```
+
+Example results:
+
+```txt
+  Sure, here's a light-hearted joke for you:
+
+  Why don't skeletons fight each other?
+
+  They don't have the guts.
+
+  vowels: 29
 ```
 
 ### Chaining with Bash Scripts

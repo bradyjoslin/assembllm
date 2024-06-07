@@ -52,7 +52,7 @@ type Task struct {
 
 const (
 	configFileName = "config.yaml"
-	version        = "0.1.8"
+	version        = "0.2.0"
 )
 
 var (
@@ -306,12 +306,61 @@ func readfile(path string) (string, error) {
 	return string(content), nil
 }
 
+func callExtismPlugin(source string, function string, input string) (string, error) {
+	var wasm extism.Wasm
+
+	if strings.HasPrefix(source, "https://") {
+		wasm = extism.WasmUrl{
+			Url: source,
+		}
+	} else {
+		if !isFilePath(source) {
+			return "", fmt.Errorf("file not found: %s", source)
+		}
+
+		wasm = extism.WasmFile{
+			Path: source,
+		}
+	}
+
+	manifest := extism.Manifest{
+		Wasm: []extism.Wasm{
+			wasm,
+		},
+	}
+
+	plugin, err := extism.NewPlugin(
+		context.Background(),
+		manifest,
+		extism.PluginConfig{
+			EnableWasi: false,
+		},
+		[]extism.HostFunction{},
+	)
+	if err != nil {
+		return "", err
+	}
+	if plugin == nil {
+		return "", fmt.Errorf("plugin is nil")
+	}
+
+	_, out, err := plugin.Call(function, []byte(input))
+	if err != nil {
+		return "", err
+
+	}
+	response := string(out)
+
+	return response, nil
+}
+
 func runExpr(input string, expression string) (string, error) {
 	env := map[string]interface{}{
 		"input":      input,
 		"Get":        httpGet,
 		"AppendFile": appendFile,
 		"ReadFile":   readfile,
+		"Extism":     callExtismPlugin,
 	}
 
 	program, err := expr.Compile(expression, expr.Env(env))
