@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/bitfield/script"
 	"github.com/charmbracelet/glamour"
@@ -145,6 +146,60 @@ func init() {
 		err = os.WriteFile(configPath, defaultConfig, 0644)
 		if err != nil {
 			log.Fatalf("Unable to write default config to file: %v", err)
+		}
+	} else {
+		// Read the existing config file
+		configData, err := os.ReadFile(configPath)
+		if err != nil {
+			log.Fatalf("Unable to read config file: %v", err)
+		}
+
+		currentConfig := string(configData)
+		configUpdates := currentConfig
+		// Mapping of old plug-in hashes to latest
+		updates := []struct {
+			Old []struct {
+				Source, Hash string
+			}
+			New struct {
+				Source, Hash string
+			}
+		}{
+			{
+				Old: []struct{ Source, Hash string }{
+					{
+						Source: "https://cdn.modsurfer.dylibso.com/api/v1/module/114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7.wasm",
+						Hash:   "114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7",
+					},
+				},
+				New: struct{ Source, Hash string }{
+					Source: "https://cdn.modsurfer.dylibso.com/api/v1/module/e5768c2835a01ee1a5f10702020a82e0ba2166ba114733e2215b2c2ef423985f.wasm",
+					Hash:   "e5768c2835a01ee1a5f10702020a82e0ba2166ba114733e2215b2c2ef423985f",
+				},
+			},
+		}
+
+		// Check if updates are needed
+		for _, update := range updates {
+			for _, old := range update.Old {
+				// Replace the old source and hash with the new ones
+				configUpdates = strings.Replace(configUpdates, old.Source, update.New.Source, -1)
+				configUpdates = strings.Replace(configUpdates, old.Hash, update.New.Hash, -1)
+			}
+		}
+
+		if currentConfig == configUpdates {
+			// No updates needed
+			return
+		}
+
+		// Convert the updated config back to bytes
+		configData = []byte(configUpdates)
+
+		// Write the updated config back to the file
+		err = os.WriteFile(configPath, configData, 0644)
+		if err != nil {
+			log.Fatalf("Unable to write updated config to file: %v", err)
 		}
 	}
 }
