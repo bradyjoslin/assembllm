@@ -1,7 +1,7 @@
 completion-plugins:
   - name: openai
-    source: https://cdn.modsurfer.dylibso.com/api/v1/module/114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7.wasm
-    hash: 114e1e892c43baefb4d50cc8b0e9f66df2b2e3177de9293ffdd83898c77e04c7
+    source: https://cdn.modsurfer.dylibso.com/api/v1/module/e5768c2835a01ee1a5f10702020a82e0ba2166ba114733e2215b2c2ef423985f.wasm
+    hash: e5768c2835a01ee1a5f10702020a82e0ba2166ba114733e2215b2c2ef423985f
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: 4o
