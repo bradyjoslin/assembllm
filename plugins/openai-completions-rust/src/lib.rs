@@ -97,10 +97,24 @@ fn get_completion(
     });
 
     let res = http::request::<String>(&req, Some(req_body.to_string()))?;
-    let body = res.body();
-    let body = from_utf8(&body)?;
-    let body: ChatResult = serde_json::from_str(body)?;
-    Ok(body)
+    match res.status_code() {
+        200 => {
+            info!("Request successful");
+        }
+        _ => {
+            let response_body = res.body();
+            let body = from_utf8(&response_body)?;
+            return Err(anyhow::anyhow!(
+                "error calling API\nStatus Code: {}\n Response: {}",
+                res.status_code(),
+                body
+            ));
+        }
+    }
+    let response_body = res.body();
+    let body = from_utf8(&response_body)?;
+    let chat_result: ChatResult = serde_json::from_str(body)?;
+    Ok(chat_result)
 }
 
 fn get_config_values(
