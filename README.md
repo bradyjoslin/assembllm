@@ -76,25 +76,6 @@ Run this task with:
 
 After running the above task, you can expect as outputs a detailed blog post and a concise summary printed to stdout.
 
-### Chaining with Bash Scripts
-
-Alternatively, you can chain LLM responses using bash scripts:
-
-```sh
-#!/bin/bash
-
-TOPIC="ten bullets summarizing extism plug-in systems with wasm"
-RESEARCHER="you are a technical research assistant"
-ANALYSIS="analyze these capabilities against the broader backdrop of webassembly."
-WRITER="you are a technical writer specializing in trends, skilled at helping developers understand the practical use of new technology described from first principles"
-BLOG_POST="write a blog post on the provided research, avoid bullets, use prose and include section headers"
-
-assembllm -p perplexity "$TOPIC" \
-| assembllm -r "$RESEARCHER" "$ANALYSIS" \
-| assembllm --raw -r "$WRITER" "$BLOG_POST" \
-| tee research_example_output.md
-```
-
 ## Pre-Scripts and Post-Scripts
 
 assembllm allows the use of pre-scripts and post-scripts for data transformation and integration, providing flexibility in how data is handled before and after LLM processing. These scripts can utilize various functions to fetch, read, append, and transform data.
@@ -166,21 +147,49 @@ Example results:
   vowels: 29
 ```
 
+## Chaining with Bash Scripts
+
+While assembllm provides a powerful built-in task feature, you can also chain LLM responses directly within Bash scripts for simpler automation. Here’s an example:
+
+```sh
+#!/bin/bash
+
+TOPIC="ten bullets summarizing extism plug-in systems with wasm"
+RESEARCHER="you are a technical research assistant"
+ANALYSIS="analyze these capabilities against the broader backdrop of webassembly."
+WRITER="you are a technical writer specializing in trends, skilled at helping developers understand the practical use of new technology described from first principles"
+BLOG_POST="write a blog post on the provided research, avoid bullets, use prose and include section headers"
+
+assembllm -p perplexity "$TOPIC" \
+| assembllm -r "$RESEARCHER" "$ANALYSIS" \
+| assembllm --raw -r "$WRITER" "$BLOG_POST" \
+| tee research_example_output.md
+```
+
+**Explanation**:
+
+- **TOPIC**: Generate initial topic ideas.
+- **RESEARCHER**: Analyze the generated ideas.
+- **ANALYSIS**: Provide a deeper understanding of the topic.
+- **WRITER**: Compose a detailed blog post based on the research.
+
+This script demonstrates how you can chain multiple LLM commands together, leveraging `assembllm` to process and transform data through each stage. This approach offers an alternative to the built-in task feature for those who prefer using Bash scripts.
+
 ## Plugins
 
 Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.  `assembllm` acts as a [host application](https://extism.org/docs/concepts/host-sdk) that uses the Extism SDK to and is responsible for handling the user experience and interacting with the LLM chat completion plug-ins which use Extism's [Plug-in Development Kits (PDKs)](https://extism.org/docs/concepts/pdk).
 
 ### Sample Plugins
 
-Sample plugins are provided in the `/plugins` directory implemented using Rust, TypeScript, Go, and C#.   These samples are implemented in the default configuration on install.
+Sample plugins are provided in the `/plugins` directory implemented using Rust, TypeScript, Go, and C#. These samples are implemented in the default configuration on install.
 
 ### Plug-in Configuration
 
-`assembllm` chat completion plugins are defined in `config.yaml` that is stored in `~/.assembllm`.  The first plug-in in the configuration file will be used as the default.
+Plugins are defined in `config.yaml`, stored in `~/.assembllm`. The first plugin in the configuration file will be used as the default.
 
-The provided plug-in configuration is used to define an [Extism manifest](https://extism.org/docs/concepts/manifest/) that `assembllm` uses to load the Wasm module, grant it the relevant permissions, and provide configuration data.  Wasm is sandboxed by default, unable to access the filesystem, make network calls, or access system information like environment variables unless explicitly granted by the host.
+The provided plugin configuration defines an [Extism manifest](https://extism.org/docs/concepts/manifest/) that `assembllm` uses to load the Wasm module, grant it relevant permissions, and provide configuration data. By default, Wasm is sandboxed, unable to access the filesystem, make network calls, or access system information like environment variables unless explicitly granted by the host.
 
-Let's walk through a sample configuration as defined below. We're importing a plug-in named `openai` whose Wasm source is loaded from a remote URL.  A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plug-in will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plug-in.  The base URL the plug-in will use to make API calls to the OpenAI API is provided, granting the plug-in permission to call that resource as an allowed host.  Lastly, we set a default model, which is passed as a configuration value to the plug-in.  
+Let's walk through a sample configuration. We're importing a plugin named openai whose Wasm source is loaded from a remote URL. A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plugin will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plugin. The base URL the plugin will use to make API calls to the OpenAI API is provided, granting the plugin permission to call that resource as an allowed host. Lastly, we set a default model, which is passed as a configuration value to the plugin.
 
 ```yml
 completion-plugins:
