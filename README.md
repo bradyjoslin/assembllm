@@ -1,3 +1,5 @@
+<img src="./assets/assembllm_banner.png" height="200">
+
 # assembllm
 
 **assembllm** is a versatile CLI tool designed to combine multiple Large Language Models (LLMs) using a flexible task-based system. With a unique WebAssembly-based plugin architecture, it supports seamless integration of various AI models and custom scripts.
@@ -15,7 +17,7 @@
 
 You can quickly utilize the power of LLMs with simple commands and integrate assembllm with other tools via bash pipes for enhanced functionality:
 
-![Demo](./assets/demo.gif)
+![Demo](./assets/basic_demo.gif)
 
 ## Advanced Task Configuration
 
