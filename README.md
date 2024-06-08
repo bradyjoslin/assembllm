@@ -1,6 +1,8 @@
 # assembllm
 
-<img src="./assets/assembllm_banner.png" height="200">
+<div align="center">
+  <img src="./assets/assembllm_banner.png" alt="Banner Image" style="width: 100%; max-width: 800px; height: auto;">
+</div>
 
 A versatile CLI tool designed to combine multiple Large Language Models (LLMs) using a flexible task-based system. With a unique WebAssembly-based plugin architecture, it supports seamless integration of various AI models and custom scripts.
 
