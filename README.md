@@ -7,7 +7,7 @@
 ### Key Features:
 
 - **Multi-Model Support**: Integrates with [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation), among others.
-- **Plugin Architecture**: Extensible via WebAssembly plugins written in multiple languages (JavaScript, Rust, Go, and more) using [Extism](https://extism.org/).
+- **Plugin Architecture**: Extensible via WebAssembly plugins written in a variety of languages, including JavaScript, Rust, Go, and C#, using [Extism](https://extism.org/).
 - **Task Chaining**: Automate workflows by chaining multiple tasks where outputs of one feed into the next.
 - **Flexible Scripting**: Use pre- and post-scripts for data transformation and integration.
 
