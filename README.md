@@ -1,68 +1,36 @@
 # assembllm
 
-`assembllm` brings the power of LLM AIs to the command line with an extensible, WebAssembly-based plugin architecture.
+<img src="./assets/assembllm_banner.png" height="200">
 
-- **LLM Chat Completions**: Supports building prompts piped from stdin and/or provided as an input argument.
-- **Multi-AI Support**: Comes with built-in support for [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation).
-- **LLM Agent Chaining**: pass the output of one LLM as input to another, in a sequence or "pipeline", to perform complex tasks.
-- **Plug-in Architecture**: Easily extend support for other LLMs. Plug-ins can be added via configuration without the need to recompile `assembllm`.
-- **Cross-language support**: Create custom plugins in a variety of languages, including JavaScript, Rust, Go, C#, F#, AssemblyScript, Haskell, Zig, and C.
+A versatile CLI tool designed to combine multiple Large Language Models (LLMs) using a flexible task-based system. With a unique WebAssembly-based plugin architecture, it supports seamless integration of various AI models and custom scripts.
 
-## Installing
+### Key Features:
 
-```bash
-# install with brew
-brew tap bradyjoslin/assembllm
-brew install bradyjoslin/assembllm/assembllm
+- **Multi-Model Support**: Integrates with [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation), among others.
+- **Plugin Architecture**: Extensible via WebAssembly plugins written in a variety of languages, including JavaScript, Rust, Go, and C#, using [Extism](https://extism.org/).
+- **Task Chaining**: Automate workflows by chaining multiple tasks where outputs of one feed into the next.
+- **Flexible Scripting**: Use pre- and post-scripts for data transformation and integration.
 
-# install with Go
-go install github.com/bradyjoslin/assembllm
-```
+## Basic Usage
 
-Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assembllm/releases).
+### Simple Commands
 
-## Usage
+You can quickly utilize the power of LLMs with simple commands and integrate assembllm with other tools via bash pipes for enhanced functionality:
 
-```txt
-$ assembllm -h
-A WASM plug-in based CLI for AI chat completions
+![Demo](./assets/basic_demo.gif)
 
-Usage:
-  assembllm [prompt] [flags]
-  assembllm [command]
+## Advanced Task Configuration
 
-Available Commands:
-  tasks       LLM prompt chaining for complex tasks.
+For more complex workflows, define and chain tasks together. Here’s an example:
 
-Flags:
-  -p, --plugin string        The name of the plugin to use (default "openai")
-  -P, --choose-plugin        Choose the plugin to use
-  -m, --model string         The name of the model to use
-  -M, --choose-model         Choose the model to use
-  -t, --temperature string   The temperature to use
-  -r, --role string          The role to use
-      --raw                  Raw output without formatting
-  -v, --version              Print the version
-  -h, --help                 help for assembllm
+### Example Task Configuration
 
-Use "assembllm [command] --help" for more information about a command.
-```
+This example demonstrates how to chain multiple tasks together to generate, analyze, compose, and summarize content:
 
-Quickly get completion responses using default plug-in and model:
-
-![Demo](./assets/demo.gif)
-
-Select from a list of models supported by each plug-in:
-
-![Select Model Demo](./assets/choose_model_demo.gif)
-
-Build complex prompts by piping from stdin:
-
-![Curl Demo](./assets/piping_curl_demo.gif)
-
-## LLM Chaining
-
-Combine multiple LLMs using the `tasks` command, where the results of each task feeds into the next. Let's walk through a sample task configuration.  At minimum each task needs a `name`, `plugin`, and `prompt`.  Here we use perplexity to generate the initial ideas for our topic.  Then conduct research and analysis on that output by first augmenting the results with information about Extism's GitHub repos using a `pre_script`, which calls a REST API and transforms the results to a more consice set of JSON, reducing LLM token usage.  Then we compose a blog post based on the research output and write the blog post to a local file using a `post_script`.  Finally, we read the blog post from the local file and generate a summary to stdout.
+- Generate Topic Ideas: Use Perplexity to generate initial ideas.
+- Conduct Research: Augment the generated ideas with data from Extism's GitHub repositories using a pre-script.
+- Write Blog Post: Compose a blog post based on the research.
+- Summarize Blog Post: Read the blog post from a file and generate a summary.
 
 ```yaml
 tasks:
@@ -100,52 +68,43 @@ tasks:
     prompt: "summarize the blog post in 5 bullets"
 ```
 
-Then run this task using `assebmllm`:
+Run this task with:
 
 ```sh
  assembllm tasks research_example_task.yaml
 ```
 
-The result of running was this detailed blog post [research_example_output.md](https://github.com/bradyjoslin/assembllm/blob/main/llm_chaining/research_example_output.md).
+After running the above task, you can expect as outputs a detailed blog post and a concise summary printed to stdout.
 
-And this concise summary printed to stdout:
+## Pre-Scripts and Post-Scripts
 
-```md
-  1. Language Agnosticism and Flexibility: Extism supports multiple
-  programming languages through various Plug-in Development Kits (PDKs),
-  enabling developers to use their preferred languages and existing codebases,
-  consistent with the language-agnostic goals of the WASM ecosystem.
+assembllm allows the use of pre-scripts and post-scripts for data transformation and integration, providing flexibility in how data is handled before and after LLM processing. These scripts can utilize various functions to fetch, read, append, and transform data.
 
-  2. Security and Sandboxing: Extism ensures the secure execution of untrusted
-  code by leveraging WebAssembly's sandboxing and memory protection features,
-  providing an additional layer of security for host applications.
+Expressions are powered by [Expr](https://expr-lang.org/), a Go-centric expression language designed to deliver dynamic configurations.  All expressions result in a single value. See the full language definition [here](https://expr-lang.org/docs/language-definition). 
 
-  3. Host Functions and Extensibility: Extism allows plug-ins to import
-  functions from the host application, facilitating powerful integrations such
-  as database access and API usage, enhancing the functionality and
-  flexibility of software.
-
-  4. Use Cases and Practical Applications: Extism's versatility is showcased
-  in various projects, including Function-as-a-Service (FaaS) platforms and web
-  applications, aligning well with broader WASM trends in cloud computing,
-  edge computing, IoT, and browser-based applications.
-
-  5. Component Model and Future Roadmap: Extism is committed to evolving with
-  the WASM ecosystem, actively tracking and planning the implementation of the
-  Component Model to improve module interoperability and ease of use, ensuring
-  it remains a cutting-edge tool for developers.
-```
-
-### Pre- and Post-Scripts
-
-Create `pre_script` and `post_script` expressions with [Expr](https://expr-lang.org/), a Go-centric expression language designed to deliver dynamic configurations.  See the full language definition [here](https://expr-lang.org/docs/language-definition).  All expressions result in a single value.  
-
-In addition to all of the functionality provided by Expr, `assebmllm` offers these additional functions in expressions:
+In addition to all of the functionality provided by Expr, these functions are available in expressions:
 
 - **Get**: perform http GET calls within functions
+  - **Signature**: Get(url: str) -> str
+  - **Parameters**: url (str): The URL to fetch data from.
+  - **Returns**: Response data as a string
 - **ReadFile**: read files from your local filesystem
+  - **Signature**: ReadFile(filepath: str) -> str
+  - **Parameters**: filepath (str): The path to the file to read.
+  - **Returns**: File content as a string.
 - **AppendFile**: appends content to file, creating if it doesn't exist
+  - **Signature**: AppendFile(content: str, filepath: str) -> None
+  - **Parameters**:
+    - content (str): The content to append.
+    - filepath (str): The path to the file to append to.
+  - **Returns**: None.
 - **Extism**: calls a wasm function, source can be a file or url
+  - **Signature**: Extism(source: str, function_name: str, args: list) -> str
+  - **Parameters**:
+    - source (str): The source of the WebAssembly function (file or URL).
+    - function_name (str): The name of the function to call.
+    - args (list): A list of arguments to pass to the function.
+  - **Returns**: Result of the WebAssembly function call as a string.
 
 In addition to these functions, an `input` variable is provided with the contents of the prompt at that stage of the chain.
 
@@ -188,9 +147,9 @@ Example results:
   vowels: 29
 ```
 
-### Chaining with Bash Scripts
+## Chaining with Bash Scripts
 
-Alternatively, you can chain LLM responses using bash scripts:
+While assembllm provides a powerful built-in task feature, you can also chain LLM responses directly within Bash scripts for simpler automation. Here’s an example:
 
 ```sh
 #!/bin/bash
@@ -207,21 +166,30 @@ assembllm -p perplexity "$TOPIC" \
 | tee research_example_output.md
 ```
 
+**Explanation**:
+
+- **TOPIC**: Generate initial topic ideas.
+- **RESEARCHER**: Analyze the generated ideas.
+- **ANALYSIS**: Provide a deeper understanding of the topic.
+- **WRITER**: Compose a detailed blog post based on the research.
+
+This script demonstrates how you can chain multiple LLM commands together, leveraging `assembllm` to process and transform data through each stage. This approach offers an alternative to the built-in task feature for those who prefer using Bash scripts.
+
 ## Plugins
 
 Plug-ins are powered by [Extism](https://extism.org), a cross-language framework for building web-assembly based plug-in systems.  `assembllm` acts as a [host application](https://extism.org/docs/concepts/host-sdk) that uses the Extism SDK to and is responsible for handling the user experience and interacting with the LLM chat completion plug-ins which use Extism's [Plug-in Development Kits (PDKs)](https://extism.org/docs/concepts/pdk).
 
 ### Sample Plugins
 
-Sample plugins are provided in the `/plugins` directory implemented using Rust, TypeScript, Go, and C#.   These samples are implemented in the default configuration on install.
+Sample plugins are provided in the `/plugins` directory implemented using Rust, TypeScript, Go, and C#. These samples are implemented in the default configuration on install.
 
 ### Plug-in Configuration
 
-`assembllm` chat completion plugins are defined in `config.yaml` that is stored in `~/.assembllm`.  The first plug-in in the configuration file will be used as the default.
+Plugins are defined in `config.yaml`, stored in `~/.assembllm`. The first plugin in the configuration file will be used as the default.
 
-The provided plug-in configuration is used to define an [Extism manifest](https://extism.org/docs/concepts/manifest/) that `assembllm` uses to load the Wasm module, grant it the relevant permissions, and provide configuration data.  Wasm is sandboxed by default, unable to access the filesystem, make network calls, or access system information like environment variables unless explicitly granted by the host.
+The provided plugin configuration defines an [Extism manifest](https://extism.org/docs/concepts/manifest/) that `assembllm` uses to load the Wasm module, grant it relevant permissions, and provide configuration data. By default, Wasm is sandboxed, unable to access the filesystem, make network calls, or access system information like environment variables unless explicitly granted by the host.
 
-Let's walk through a sample configuration as defined below. We're importing a plug-in named `openai` whose Wasm source is loaded from a remote URL.  A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plug-in will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plug-in.  The base URL the plug-in will use to make API calls to the OpenAI API is provided, granting the plug-in permission to call that resource as an allowed host.  Lastly, we set a default model, which is passed as a configuration value to the plug-in.  
+Let's walk through a sample configuration. We're importing a plugin named openai whose Wasm source is loaded from a remote URL. A hash is provided to confirm the integrity of the Wasm source. The `apiKey` for the plugin will be loaded from an environment variable named `OPENAI_API_KEY` and passed as a configuration value to the plugin. The base URL the plugin will use to make API calls to the OpenAI API is provided, granting the plugin permission to call that resource as an allowed host. Lastly, we set a default model, which is passed as a configuration value to the plugin.
 
 ```yml
 completion-plugins:
