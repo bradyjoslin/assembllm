@@ -21,7 +21,7 @@ You can quickly utilize the power of LLMs with simple commands and integrate ass
 
 ## Advanced Task Configuration
 
-For more complex workflows, define and chain tasks together. Here’s an example:
+For more complex workflows, define and chain tasks together.
 
 ### Example Task Configuration
 
