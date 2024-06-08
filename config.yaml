@@ -5,6 +5,12 @@ completion-plugins:
     apiKey: OPENAI_API_KEY
     url: api.openai.com
     model: 4o
+  - name: perplexity
+    source: https://github.com/bradyjoslin/assembllm-perplexity/releases/latest/download/assembllm_perplexity.wasm
+    hash: 
+    apiKey: PERPLEXITY_API_KEY
+    url: api.perplexity.ai
+    model: llam3-sso
   - name: cloudflare
     source: https://github.com/bradyjoslin/assembllm-cloudflare/releases/latest/download/assembllm_cloudflare.wasm
     hash: 
@@ -12,30 +18,3 @@ completion-plugins:
     accountId: CF_ACCOUNT_ID
     url: api.cloudflare.com
     model: llama-2-7b
-  - name: perplexity
-    source: https://github.com/bradyjoslin/assembllm-perplexity/releases/latest/download/assembllm_perplexity.wasm
-    hash: 
-    apiKey: PERPLEXITY_API_KEY
-    url: api.perplexity.ai
-    model: llam3-sso
-  - name: openaigo
-    source: https://github.com/bradyjoslin/assembllm-openai-go/releases/latest/download/assembllm-openai-go.wasm
-    hash: 
-    apiKey: OPENAI_API_KEY
-    url: api.openai.com
-    model: gpt-4o
-    wasi: true
-  - name: openaicsharp
-    source: https://github.com/bradyjoslin/assembllm-openai-csharp/releases/latest/download/assembllm-openai-csharp.wasm
-    hash: 
-    apiKey: OPENAI_API_KEY
-    url: api.openai.com
-    model: gpt-4o
-    wasi: true
-  - name: openaits
-    source: https://github.com/bradyjoslin/assembllm-openai-ts/releases/latest/download/assembllm-openai-ts.wasm
-    hash: 
-    apiKey: OPENAI_API_KEY
-    url: api.openai.com
-    model: gpt-4o
-    wasi: true
