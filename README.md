@@ -27,10 +27,10 @@ For more complex workflows, define and chain tasks together. Here’s an example
 
 This example demonstrates how to chain multiple tasks together to generate, analyze, compose, and summarize content:
 
-- Generate Topic Ideas: Use Perplexity to generate initial ideas.
-- Conduct Research: Augment the generated ideas with data from Extism's GitHub repositories using a pre-script.
-- Write Blog Post: Compose a blog post based on the research.
-- Summarize Blog Post: Read the blog post from a file and generate a summary.
+- **Generate Topic Ideas**: Use Perplexity to generate initial ideas.
+- **Conduct Research**: Augment the generated ideas with data from Extism's GitHub repositories using a pre-script.
+- **Write Blog Post**: Compose a blog post based on the research.
+- **Summarize Blog Post**: Read the blog post from a file and generate a summary.
 
 ```yaml
 tasks:
