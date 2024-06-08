@@ -31,7 +31,7 @@ This example demonstrates how to chain multiple tasks together to generate, anal
 
 - **Generate Topic Ideas**: Use Perplexity to generate initial ideas.
 - **Conduct Research**: Augment the generated ideas with data from Extism's GitHub repositories using a pre-script.
-- **Write Blog Post**: Compose a blog post based on the research.
+- **Write Blog Post**: Compose a blog post based on the research and write it to a file.
 - **Summarize Blog Post**: Read the blog post from a file and generate a summary.
 
 ```yaml
@@ -76,7 +76,7 @@ Run this task with:
  assembllm tasks research_example_task.yaml
 ```
 
-After running the above task, you can expect as outputs a detailed blog post and a concise summary printed to stdout.
+After running the above task, you can expect as outputs a detailed blog post saved to a file and a concise summary printed to stdout.
 
 ## Pre-Scripts and Post-Scripts
 
@@ -90,16 +90,19 @@ In addition to all of the functionality provided by Expr, these functions are av
   - **Signature**: Get(url: str) -> str
   - **Parameters**: url (str): The URL to fetch data from.
   - **Returns**: Response data as a string
+
 - **ReadFile**: read files from your local filesystem
   - **Signature**: ReadFile(filepath: str) -> str
   - **Parameters**: filepath (str): The path to the file to read.
   - **Returns**: File content as a string.
+
 - **AppendFile**: appends content to file, creating if it doesn't exist
   - **Signature**: AppendFile(content: str, filepath: str) -> None
   - **Parameters**:
     - content (str): The content to append.
     - filepath (str): The path to the file to append to.
   - **Returns**: None.
+
 - **Extism**: calls a wasm function, source can be a file or url
   - **Signature**: Extism(source: str, function_name: str, args: list) -> str
   - **Parameters**:
