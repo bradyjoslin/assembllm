@@ -29,15 +29,16 @@ import (
 )
 
 type AppConfig struct {
-	Name          string
-	Model         string
-	ChooseAIModel bool
-	ChoosePlugin  bool
-	Temperature   string
-	Role          string
-	Raw           bool
-	Version       bool
-	TasksPath     string
+	Name           string
+	Model          string
+	ChooseAIModel  bool
+	ChoosePlugin   bool
+	ChooseWorkflow bool
+	Temperature    string
+	Role           string
+	Raw            bool
+	Version        bool
+	WorkflowPath   string
 }
 
 type Tasks struct {
@@ -81,21 +82,22 @@ var (
 	}
 
 	tasksCmd = &cobra.Command{
-		Use:   "tasks",
-		Short: "LLM prompt chaining for complex tasks.",
-		Long:  "Provide filepath to yaml file containing tasks to run.",
-		Args:  cobra.MaximumNArgs(2),
+		Use:        "tasks",
+		Hidden:     true,
+		Deprecated: "Use the root command with the --workflow flag instead.\n",
+		Short:      "LLM prompt chaining for complex tasks.",
+		Args:       cobra.MaximumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				huh.NewFilePicker().
 					Title("Select a yaml file containing the tasks to run:").
 					AllowedTypes([]string{".yaml", "yml"}).
-					Value(&appCfg.TasksPath).
+					Value(&appCfg.WorkflowPath).
 					Picking(true).
 					Height(10).
 					Run()
 			} else {
-				appCfg.TasksPath = args[0]
+				appCfg.WorkflowPath = args[0]
 			}
 
 			var prompt string
@@ -192,6 +194,8 @@ func initializeFlags() {
 	flags.StringVarP(&appCfg.Role, "role", "r", "", "The role to use")
 	flags.BoolVarP(&appCfg.Raw, "raw", "", false, "Raw output without formatting")
 	flags.BoolVarP(&appCfg.Version, "version", "v", false, "Print the version")
+	flags.StringVarP(&appCfg.WorkflowPath, "workflow", "w", "", "The path to a workflow file")
+	flags.BoolVarP(&appCfg.ChooseWorkflow, "choose-workflow", "W", false, "Choose a workflow to run")
 	flags.SortFlags = false
 }
 
@@ -448,7 +452,7 @@ func generateResponseForTasks(tasks Tasks) (string, error) {
 }
 
 func handleTasks(prompt string) error {
-	tasksCfg, err := os.ReadFile(appCfg.TasksPath)
+	tasksCfg, err := os.ReadFile(appCfg.WorkflowPath)
 	if err != nil {
 		return err
 	}
@@ -517,6 +521,32 @@ func runCommand(cmd *cobra.Command, args []string) error {
 	if appCfg.Version {
 		fmt.Println(appName + " " + version)
 		return nil
+	}
+
+	if appCfg.ChooseWorkflow {
+		huh.NewFilePicker().
+			Title("Select a workflow file:").
+			AllowedTypes([]string{".yaml", "yml"}).
+			Value(&appCfg.WorkflowPath).
+			Picking(true).
+			Height(10).
+			Run()
+	}
+
+	if appCfg.WorkflowPath != "" {
+		var prompt string
+		stdInStats, _ := os.Stdin.Stat()
+
+		if (stdInStats.Mode() & os.ModeCharDevice) == 0 {
+			reader := bufio.NewReader(os.Stdin)
+			s, _ := io.ReadAll(reader)
+			prompt += string(s)
+		}
+
+		if len(args) == 1 {
+			prompt += args[0]
+		}
+		return handleTasks(prompt)
 	}
 
 	if appCfg.ChoosePlugin {

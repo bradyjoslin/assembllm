@@ -21,11 +21,11 @@ You can quickly utilize the power of LLMs with simple commands and integrate ass
 
 ![Demo](./assets/basic_demo.gif)
 
-## Advanced Task Configuration
+## Advanced Workflow Configuration
 
 For more complex workflows, define and chain tasks together.
 
-### Example Task Configuration
+### Example Workflow Configuration
 
 This example demonstrates how to chain multiple tasks together to generate, analyze, compose, and summarize content:
 
@@ -78,7 +78,7 @@ tasks:
 Run this task with:
 
 ```sh
- assembllm tasks research_example_task.yaml
+ assembllm --workflow research_example_task.yaml
 ```
 
 After running the above task, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
