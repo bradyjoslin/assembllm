@@ -1,4 +1,4 @@
-me: Generate Presentation Workflow
+name: Generate Presentation Workflow
 description: |
   Generates a presentation with a designer persona.  Outputs a presentation outline
   and the presentation itself.  The outline should be structured to maximize engagement,
