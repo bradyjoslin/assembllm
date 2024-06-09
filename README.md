@@ -93,7 +93,7 @@ Workflows in `assembllm` can optionally take a prompt from either standard input
 - **Optional First Task Prompt**: The prompt in the first task of a workflow is also optional.
 - **Combining Prompts**: If both are provided, they are combined to form a unified prompt for the first task.
 
-This flexibility allows workflows to be dynamic and adaptable based on user input, not just hard coded in the workflow.
+This flexibility allows workflows to be dynamic and adaptable based on user input.
 
 ### Pre-Scripts and Post-Scripts
 
