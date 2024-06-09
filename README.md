@@ -77,7 +77,7 @@ Run this task with:
  assembllm tasks research_example_task.yaml
 ```
 
-After running the above task, you can expect as outputs a detailed blog post saved to a file and a concise summary printed to stdout.
+After running the above task, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
 
 ## Pre-Scripts and Post-Scripts
 
