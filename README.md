@@ -83,7 +83,7 @@ Run this workflow with:
 
 After running the above workflow, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
 
-#### Workflow Prompts
+### Workflow Prompts
 
 Workflows in `assembllm` can optionally take a prompt from either standard input (stdin) or as an argument. The provided input is integrated into the prompt defined in the first task of the workflow.
 
@@ -95,7 +95,7 @@ Workflows in `assembllm` can optionally take a prompt from either standard input
 
 This flexibility allows workflows to be dynamic and adaptable based on user input.
 
-## Pre-Scripts and Post-Scripts
+### Pre-Scripts and Post-Scripts
 
 assembllm allows the use of pre-scripts and post-scripts for data transformation and integration, providing flexibility in how data is handled before and after LLM processing. These scripts can utilize various functions to fetch, read, append, and transform data.
 
@@ -179,7 +179,7 @@ Example results:
   vowels: 29
 ```
 
-## Chaining with Bash Scripts
+### Chaining with Bash Scripts
 
 While assembllm provides a powerful built-in workflow feature, you can also chain LLM responses directly within Bash scripts for simpler automation. Here’s an example:
 
