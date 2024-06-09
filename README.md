@@ -21,7 +21,7 @@ You can quickly utilize the power of LLMs with simple commands and integrate ass
 
 ![Demo](./assets/basic_demo.gif)
 
-## Advanced Workflow Configuration
+## Advanced Prompting with Workflows
 
 For more complex prompts, including the ability to create prompt pipelines, define and chain tasks together with workflows.  We have a [library of workflows](https://github.com/bradyjoslin/assembllm/tree/main/workflows) you can use as examples and templates, let's walk through one together here.
 
@@ -75,13 +75,25 @@ tasks:
     prompt: "summarize the blog post in 5 bullets"
 ```
 
-Run this task with:
+Run this workflow with:
 
 ```sh
  assembllm --workflow research_example_task.yaml
 ```
 
-After running the above task, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
+After running the above workflow, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
+
+#### Workflow Prompts
+
+Workflows in `assembllm` can optionally take a prompt from either standard input (stdin) or as an argument. The provided input is integrated into the prompt defined in the first task of the workflow.
+
+**Key Points**:
+
+- **Optional Input**: You can run workflows without a prompt.
+- **First Task Prompt**: The prompt in the first task of a workflow is optional.
+- **Combining Prompts**: If both are provided, they are combined to form a unified prompt for the first task.
+
+This flexibility allows workflows to be dynamic and adaptable based on user input.
 
 ## Pre-Scripts and Post-Scripts
 
@@ -169,7 +181,7 @@ Example results:
 
 ## Chaining with Bash Scripts
 
-While assembllm provides a powerful built-in task feature, you can also chain LLM responses directly within Bash scripts for simpler automation. Here’s an example:
+While assembllm provides a powerful built-in workflow feature, you can also chain LLM responses directly within Bash scripts for simpler automation. Here’s an example:
 
 ```sh
 #!/bin/bash
@@ -193,7 +205,7 @@ assembllm -p perplexity "$TOPIC" \
 - **ANALYSIS**: Provide a deeper understanding of the topic.
 - **WRITER**: Compose a detailed blog post based on the research.
 
-This script demonstrates how you can chain multiple LLM commands together, leveraging `assembllm` to process and transform data through each stage. This approach offers an alternative to the built-in task feature for those who prefer using Bash scripts.
+This script demonstrates how you can chain multiple LLM commands together, leveraging `assembllm` to process and transform data through each stage. This approach offers an alternative to the built-in workflow feature for those who prefer using Bash scripts.
 
 ## Plugins
 
