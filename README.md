@@ -36,9 +36,11 @@ This example demonstrates how to chain multiple tasks together to generate, anal
 
 ```yaml
 tasks:
+
   - name: topic
     plugin: perplexity
     prompt: "ten bullets summarizing extism plug-in systems with wasm"
+
   - name: researcher
     plugin: openai
     pre_script: >
@@ -54,6 +56,7 @@ tasks:
       | toJSON()
     role: "you are a technical research assistant"
     prompt: "analyze these capabilities against the broader backdrop of webassembly."
+
   - name: writer
     plugin: openai
     role: "you are a technical writer"
@@ -63,6 +66,7 @@ tasks:
     post_script: |
       let _ = AppendFile(input, "research_example_output.md");
       Resend("example@example.com", "info@notifications.example.com", "Extism Research", input)
+
   - name: reader
     plugin: openai
     pre_script: |
