@@ -1,3 +1,12 @@
+name: Sample Calling Wasm with Extism Workflow
+description: |
+  OpenAI is prompted to provide a joke.  Using a post_script we use the Extism function to run webassembly 
+  that counts the number of vowels in the provided response.  The number of vowels is added as a footer to 
+  the response output.
+
+  Example usage:
+   assembllm -w extism_task.yaml
+
 tasks:
   - name: topic
     plugin: openai
