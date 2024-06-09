@@ -23,7 +23,7 @@ You can quickly utilize the power of LLMs with simple commands and integrate ass
 
 ## Advanced Workflow Configuration
 
-For more complex workflows, define and chain tasks together.
+For more complex prompts, including the ability to create prompt pipelines, define and chain tasks together with workflows.  We have a [library of workflows](https://github.com/bradyjoslin/assembllm/tree/main/workflows) you can use as examples and templates, let's walk through one together here.
 
 ### Example Workflow Configuration
 
