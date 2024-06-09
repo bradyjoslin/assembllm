@@ -58,7 +58,7 @@ type Task struct {
 
 const (
 	configFileName = "config.yaml"
-	version        = "0.2.3"
+	version        = "0.3.0"
 )
 
 var (
