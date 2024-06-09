@@ -3,6 +3,9 @@ description: |
   This workflow takes a git diff and generates a changelog with a developer persona.
   Based off of https://github.com/danielmiessler/fabric/tree/main/patterns/summarize_git_diff
 
+  Example usage:
+  curl -s https://github.com/bradyjoslin/assembllm/compare/v0.2.3...v0.3.0.diff | assembllm -w git_diff.yaml
+
 tasks:
   - name: git_diff
     plugin: openai
