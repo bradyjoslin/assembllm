@@ -84,7 +84,7 @@ var (
 		Use:   "tasks",
 		Short: "LLM prompt chaining for complex tasks.",
 		Long:  "Provide filepath to yaml file containing tasks to run.",
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.MaximumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				huh.NewFilePicker().
@@ -98,7 +98,12 @@ var (
 				appCfg.TasksPath = args[0]
 			}
 
-			handleTasks()
+			var prompt string
+			if len(args) == 2 {
+				prompt = args[1]
+			}
+
+			handleTasks(prompt)
 			return nil
 		},
 	}
@@ -442,7 +447,7 @@ func generateResponseForTasks(tasks Tasks) (string, error) {
 	return out, nil
 }
 
-func handleTasks() error {
+func handleTasks(prompt string) error {
 	tasksCfg, err := os.ReadFile(appCfg.TasksPath)
 	if err != nil {
 		return err
@@ -452,6 +457,12 @@ func handleTasks() error {
 	err = yaml.Unmarshal(tasksCfg, &tasks)
 	if err != nil {
 		return err
+	}
+
+	if len(tasks.Tasks) > 0 {
+		if prompt != "" {
+			tasks.Tasks[0].Prompt = prompt + " " + tasks.Tasks[0].Prompt
+		}
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
