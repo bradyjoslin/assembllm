@@ -5,6 +5,10 @@ description: |
   clarity, and effectiveness.  The presentation should be based on the outline and
   should use principles from Patrick Winston's "How to Speak" seminar.
 
+  Example usage:
+   assembllm -w generate_presentation.yaml \
+   "ten bullets summarizing web assembly from first principles and the impact on systems design and architecture"
+
   Easily play the outputted markdown presentation with 
   https://github.com/maaslalani/slides
 
