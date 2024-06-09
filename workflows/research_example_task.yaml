@@ -28,7 +28,7 @@ tasks:
     model: 4o
     post_script: |
       let _ = AppendFile(input, "research_example_output.md");
-      Resend("brady@bradyjoslin.com", "info@notifications.bradyjoslin.com", "Extism Research Paper", input)
+      Resend("example@example.com", "info@notifications.example.com", "Extism Research Paper", input)
 
   - name: reader
     plugin: openai
