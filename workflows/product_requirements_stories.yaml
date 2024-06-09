@@ -4,6 +4,9 @@ description: |
   and acceptance criteria with an Agile Story persona.  The PRD is generated first, written to a file, which is 
   passed to the Agile Story persona as the prompt.
   Based off of https://github.com/danielmiessler/fabric/tree/main/patterns/agility_story
+
+  Example usage:
+  assembllm -w product_requirements_stories.yaml "home automation system that automatically fills pool with water when level is low"
     
 tasks:
 
