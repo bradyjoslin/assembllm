@@ -1,0 +1,112 @@
+name: Generate Presentation Workflow
+description: |
+  Generates a presentation with a designer persona.  Outputs a presentation outline
+  and the presentation itself.  The outline should be structured to maximize engagement,
+  clarity, and effectiveness.  The presentation should be based on the outline and
+  should use principles from Patrick Winston's "How to Speak" seminar.
+
+  Easily play the outputted markdown presentation with 
+  https://github.com/maaslalani/slides
+
+tasks:
+  - name: topic
+    plugin: perplexity
+
+  - name: presentation_writer
+    plugin: openai
+    role: |
+      Create a presentation outline based on Patrick Winston's "How to Speak"     
+      seminar on the topic provided. The presentation should be structured to 
+      maximize engagement, clarity, and effectiveness. Follow these guidelines:                        
+                                                                                  
+      1. Introduction:                                                            
+        • Start with a compelling opening statement to capture the audience's     
+        attention.                                                                
+        • Provide a clear overview of the main points that will be covered.       
+        • Establish credibility by briefly mentioning your background or expertise
+        related to the topic.                                                     
+      2. Structure:                                                               
+        • Use a clear and logical structure, dividing the presentation into       
+        distinct sections (e.g., Introduction, Main Points, Conclusion).          
+        • Within each section, organize your content into sub-points to ensure a  
+        coherent flow of information.                                             
+      3. Engagement:                                                              
+        • Include anecdotes, analogies, or stories to make the content relatable  
+        and memorable.                                                            
+        • Pose rhetorical questions or invite audience participation to maintain  
+        interest.                                                                 
+        • Use visual aids (e.g., slides, diagrams) to complement and reinforce    
+        your verbal message.                                                      
+      4. Clarity:                                                                 
+        • Use simple and concise language to convey your ideas.                   
+        • Avoid jargon or complex terminology unless it is essential, and provide 
+        explanations when necessary.                                              
+        • Summarize key points at the end of each section to reinforce            
+        understanding.                                                            
+      5. Delivery:                                                                
+        • Practice good vocal techniques, such as varying your tone, pace, and    
+        volume to emphasize important points.                                     
+        • Use body language effectively, including eye contact, gestures, and     
+        movement.                                                                 
+        • Be mindful of filler words (e.g., "um," "uh") and aim to minimize them. 
+      6. Conclusion:                                                              
+        • Summarize the main points covered in the presentation.                  
+        • Provide a strong closing statement that reinforces the overall message. 
+        • End with a call to action or a thought-provoking question to leave a    
+        lasting impression.                                                       
+                                                                                  
+                                                                                  
+      Example Outline:                                                            
+                                                                                  
+      1. Introduction:                                                            
+        • Opening statement: "Imagine a world where every presentation you attend 
+        is engaging and informative..."                                           
+        • Overview: "Today, we'll cover the key elements of effective             
+        presentations: structure, engagement, clarity, and delivery."             
+        • Establish credibility: "As a communication expert with over a decade of 
+        experience..."                                                            
+      2. Main Points:                                                             
+        • Structure:                                                              
+          • Importance of a clear structure                                       
+          • Dividing content into sections and sub-points                         
+        • Engagement:                                                             
+          • Using stories and analogies                                           
+          • Encouraging audience participation                                    
+        • Clarity:                                                                
+          • Simplifying language                                                  
+          • Summarizing key points                                                
+        • Delivery:                                                               
+          • Vocal techniques                                                      
+          • Effective body language                                               
+                                                                                  
+      3. Conclusion:                                                              
+        • Summarize main points                                                   
+        • Strong closing statement: "By applying these techniques, you can        
+        transform your presentations and leave a lasting impact."                 
+        • Call to action: "Start implementing these strategies in your next       
+        presentation and observe the difference."
+    post_script: |
+      let _ = AppendFile(input, "presentation_outline.md");
+      input
+
+  - name: presentation
+    plugin: openai
+    role: |
+      Create a presentation based on the outline provided which uses principles from 
+      Patrick Winston's "How to Speak" to design the outline.  The outline provided
+      includes speaker notes, don't output those here.  This will be the presentation
+      shown to the audience.  So, the content should relate only to the topic, not
+      how it should be presented.  Don't use words like:
+
+      - Summarize main points
+      - Strong closing statement
+      - Call to action
+      - Explanation
+      - Impact
+
+      Each slide should have a markdown header with the slide title and the content.
+      Only the first slide should have a top level header.  Slides should be separated 
+      by three dashes (---).
+    post_script: |
+      let _ = AppendFile(input, "presentation.md");
+      ""

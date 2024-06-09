@@ -1,7 +1,9 @@
 tasks:
+
   - name: topic
     plugin: perplexity
     prompt: "ten bullets summarizing extism plug-in systems with wasm"
+
   - name: researcher
     plugin: openai
     pre_script: >
@@ -17,6 +19,7 @@ tasks:
       | toJSON()
     role: "you are a technical research assistant"
     prompt: "analyze these capabilities against the broader backdrop of webassembly."
+
   - name: writer
     plugin: openai
     role: "you are a technical writer"
@@ -24,7 +27,9 @@ tasks:
     temperature: 0.5
     model: 4o
     post_script: |
-      AppendFile(input, "research_example_output.md")
+      let _ = AppendFile(input, "research_example_output.md");
+      Resend("example@example.com", "info@notifications.example.com", "Extism Research Paper", input)
+
   - name: reader
     plugin: openai
     pre_script: |

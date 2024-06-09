@@ -21,11 +21,11 @@ You can quickly utilize the power of LLMs with simple commands and integrate ass
 
 ![Demo](./assets/basic_demo.gif)
 
-## Advanced Task Configuration
+## Advanced Workflow Configuration
 
 For more complex workflows, define and chain tasks together.
 
-### Example Task Configuration
+### Example Workflow Configuration
 
 This example demonstrates how to chain multiple tasks together to generate, analyze, compose, and summarize content:
 
@@ -78,7 +78,7 @@ tasks:
 Run this task with:
 
 ```sh
- assembllm tasks research_example_task.yaml
+ assembllm --workflow research_example_task.yaml
 ```
 
 After running the above task, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
@@ -102,20 +102,20 @@ In addition to all of the functionality provided by Expr, these functions are av
   - **Returns**: File content as a string.
 
 - **AppendFile**: appends content to file, creating if it doesn't exist
-  - **Signature**: AppendFile(content: str, filepath: str) -> None
+  - **Signature**: AppendFile(content: str, filepath: str) -> (int64, error)
   - **Parameters**:
     - content (str): The content to append.
     - filepath (str): The path to the file to append to.
-  - **Returns**: None.
+  - **Returns**: Number of bytes written as int64 or an error
 
 - **Resend**: sends content as email using [Resend](https://resend.com/)
-  - **Signature**: Resend(to: str, from: str, subject: str, body: str) -> None
+  - **Signature**: Resend(to: str, from: str, subject: str, body: str) -> Error
   - **Parameters**:
     - to (str): Email to field
     - from (str): Email from field
     - subject (str): Email subject
     - body (str): Email body, automatically converted from markdown to HTML
-  - **Returns**: None
+  - **Returns**: Error, if one occured
   - **Requires**: [Resend API key](https://resend.com/docs/dashboard/api-keys/introduction) set to `RESEND_API_KEY` environment variable
 
 - **Extism**: calls a wasm function, source can be a file or url
