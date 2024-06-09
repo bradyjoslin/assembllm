@@ -104,15 +104,15 @@ In addition to all of the functionality provided by Expr, these functions are av
     - filepath (str): The path to the file to append to.
   - **Returns**: None.
 
-- **Email**: sends email using [Resend](https://resend.com/)
+- **Resend**: sends content as email using [Resend](https://resend.com/)
   - **Signature**: Resend(to: str, from: str, subject: str, body: str) -> None
   - **Parameters**:
     - to (str): Email to field
     - from (str): Email from field
     - subject (str): Email subject
     - body (str): Email body, automatically converted from markdown to HTML
-- **Returns**: None
-- **Requires**: [Resend API key](https://resend.com/docs/dashboard/api-keys/introduction) set to `RESEND_API_KEY` environment variable
+  - **Returns**: None
+  - **Requires**: [Resend API key](https://resend.com/docs/dashboard/api-keys/introduction) set to `RESEND_API_KEY` environment variable
 
 - **Extism**: calls a wasm function, source can be a file or url
   - **Signature**: Extism(source: str, function_name: str, args: list) -> str
