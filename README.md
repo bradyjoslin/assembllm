@@ -31,7 +31,7 @@ This example demonstrates how to chain multiple tasks together to generate, anal
 
 - **Generate Topic Ideas**: Use Perplexity to generate initial ideas.
 - **Conduct Research**: Augment the generated ideas with data from Extism's GitHub repositories using a pre-script.
-- **Write Blog Post**: Compose a blog post based on the research and write it to a file.
+- **Write Blog Post**: Compose a blog post based on the research, write it to a file, and send as an email.
 - **Summarize Blog Post**: Read the blog post from a file and generate a summary.
 
 ```yaml
@@ -61,7 +61,8 @@ tasks:
     temperature: 0.5
     model: 4o
     post_script: |
-      AppendFile(input, "research_example_output.md")
+      let _ = AppendFile(input, "research_example_output.md");
+      Resend("example@example.com", "info@notifications.example.com", "Extism Research", input)
   - name: reader
     plugin: openai
     pre_script: |
@@ -76,7 +77,7 @@ Run this task with:
  assembllm tasks research_example_task.yaml
 ```
 
-After running the above task, you can expect as outputs a detailed blog post saved to a file and a concise summary printed to stdout.
+After running the above task, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
 
 ## Pre-Scripts and Post-Scripts
 
@@ -103,6 +104,16 @@ In addition to all of the functionality provided by Expr, these functions are av
     - filepath (str): The path to the file to append to.
   - **Returns**: None.
 
+- **Resend**: sends content as email using [Resend](https://resend.com/)
+  - **Signature**: Resend(to: str, from: str, subject: str, body: str) -> None
+  - **Parameters**:
+    - to (str): Email to field
+    - from (str): Email from field
+    - subject (str): Email subject
+    - body (str): Email body, automatically converted from markdown to HTML
+  - **Returns**: None
+  - **Requires**: [Resend API key](https://resend.com/docs/dashboard/api-keys/introduction) set to `RESEND_API_KEY` environment variable
+
 - **Extism**: calls a wasm function, source can be a file or url
   - **Signature**: Extism(source: str, function_name: str, args: list) -> str
   - **Parameters**:
@@ -121,7 +132,7 @@ A `post_script` is run after sending the prompt to the LLM, therefore the `input
 ...
   - name: file_writer
     post_script: |
-      let b = AppendFile(input, "research_example_output.md");
+      let _ = AppendFile(input, "research_example_output.md");
       input
 ...
 ```
