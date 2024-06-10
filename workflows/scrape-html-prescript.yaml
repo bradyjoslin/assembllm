@@ -1,0 +1,14 @@
+name: "Extracted text summary"
+description: |
+  Using a prescript, get the contents of a remote URL, then extract text from the HTML content using a wasm plugin.  
+  Finally, send the extracted text to the LLM to summarize the content.
+
+tasks:
+  - name: summarize
+    pre_script: |
+      let content = Get("https://bradyjoslin.com/blog/remote-vs-code/");
+      let wasm = "https://github.com/bradyjoslin/extract-text-extism/releases/latest/download/extract_text_extism.wasm";
+      let res = Extism(wasm, "extract", content);
+      res
+    plugin: openai
+    prompt: "summarize this article in 5 sentences"
