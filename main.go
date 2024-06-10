@@ -427,6 +427,7 @@ func generateResponseForTasks(tasks Tasks) (string, error) {
 		}
 
 		pluginCfg.Role = task.Role
+		pluginCfg.Model = task.Model
 		prompt := out + task.Prompt
 
 		res, err := pluginCfg.generateResponse(prompt, true)
