@@ -1,0 +1,39 @@
+name: Hacker News Top Story Workflow
+description: |
+  This workflow calls the RSS feed for hacker news, obtains information about
+  the first story in the feed and sends it to perplexity to provide a summary 
+  and insight.
+
+tasks:
+  - name: topic
+    pre_script: >
+      let rss = Get('https://news.ycombinator.com/rss');
+      split(rss, "<item>")[1:] 
+      | map(
+          join(
+            split(#, "<title>") 
+            | last()
+            | split("</title>")
+            | map(
+              split(#, "<link>") 
+              | last() + " --- "
+              | split("</link>") 
+              | first()
+            )
+          )
+        ) 
+      | first()
+    plugin: perplexity
+    prompt: |
+      # Task Objective
+
+      Give a detailed analysis of the topic supported by a URL source provided.
+      Provide references, if available.  Include the URL provided at the end of
+      the summary.
+
+      ## Task Details
+
+      Be insightful. Think about the author's claims deeply and express the strengths
+      and weaknesses of their argument.  Where practical, think about how the topic
+      can impact a person's daily life, or an industry long-term, or is it just
+      passing information with little impact.
