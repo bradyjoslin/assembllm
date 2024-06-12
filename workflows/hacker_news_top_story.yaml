@@ -1,6 +1,6 @@
 name: Hacker News Top Story Workflow
 description: |
-  This workflow calls the RSS feed for hacker news, obtains information about
+  This workflow calls the RSS feed for hacker news, obtains the title and url of
   the first story in the feed and sends it to perplexity to provide a summary 
   and insight.
 
