@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -29,20 +30,24 @@ import (
 )
 
 type AppConfig struct {
-	Name           string
-	Model          string
-	ChooseAIModel  bool
-	ChoosePlugin   bool
-	ChooseWorkflow bool
-	Temperature    string
-	Role           string
-	Raw            bool
-	Version        bool
-	WorkflowPath   string
+	Name                  string
+	Model                 string
+	ChooseAIModel         bool
+	ChoosePlugin          bool
+	ChooseWorkflow        bool
+	Temperature           string
+	Role                  string
+	Raw                   bool
+	Version               bool
+	WorkflowPath          string
+	IteratorPrompt        bool
+	CurrentIterationValue interface{}
 }
 
 type Tasks struct {
-	Tasks []Task `yaml:"tasks"`
+	IterationValuesIn string `yaml:"iterator_script"`
+	IterationValues   []interface{}
+	Tasks             []Task `yaml:"tasks"`
 }
 
 type Task struct {
@@ -196,6 +201,7 @@ func initializeFlags() {
 	flags.BoolVarP(&appCfg.Version, "version", "v", false, "Print the version")
 	flags.StringVarP(&appCfg.WorkflowPath, "workflow", "w", "", "The path to a workflow file")
 	flags.BoolVarP(&appCfg.ChooseWorkflow, "choose-workflow", "W", false, "Choose a workflow to run")
+	flags.BoolVarP(&appCfg.IteratorPrompt, "iterator", "i", false, "String array of prompts ['prompt1', 'prompt2']")
 	flags.SortFlags = false
 }
 
@@ -391,6 +397,7 @@ func runExpr(input string, expression string) (string, error) {
 		"ReadFile":   readfile,
 		"Extism":     callExtismPlugin,
 		"Resend":     resend,
+		"iterValue":  appCfg.CurrentIterationValue,
 	}
 
 	program, err := expr.Compile(expression, expr.Env(env))
@@ -464,32 +471,61 @@ func handleTasks(prompt string) error {
 		return err
 	}
 
-	if len(tasks.Tasks) > 0 {
-		if prompt != "" {
-			tasks.Tasks[0].Prompt = prompt + " " + tasks.Tasks[0].Prompt
+	if tasks.IterationValuesIn == "" {
+		tasks.IterationValues = []interface{}{nil}
+	} else {
+		env := map[string]interface{}{
+			"input":      prompt,
+			"Get":        httpGet,
+			"AppendFile": appendFile,
+			"ReadFile":   readfile,
+			"Extism":     callExtismPlugin,
+			"Resend":     resend,
 		}
-	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	var res string
-	action := func() {
-		res, err = generateResponseForTasks(tasks)
+		program, err := expr.Compile(tasks.IterationValuesIn, expr.Env(env), expr.AsKind(reflect.Slice))
 		if err != nil {
-			cancel()
-			fmt.Println(err)
-			os.Exit(1)
+			return err
 		}
-		cancel()
+
+		output, err := expr.Run(program, env)
+		if err != nil {
+			return err
+		}
+
+		tasks.IterationValues = output.([]interface{})
 	}
 
-	go action()
-	_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Context(ctx).Run()
+	for i := range tasks.IterationValues {
+		appCfg.CurrentIterationValue = tasks.IterationValues[i]
 
-	if err != nil {
-		return err
+		if len(tasks.Tasks) > 0 {
+			if prompt != "" {
+				tasks.Tasks[0].Prompt = prompt + " " + tasks.Tasks[0].Prompt
+			}
+		}
+
+		ctx, cancel := context.WithCancel(context.Background())
+		var res string
+		action := func() {
+			res, err = generateResponseForTasks(tasks)
+			if err != nil {
+				cancel()
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			cancel()
+		}
+
+		go action()
+		_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Context(ctx).Run()
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Print(res)
 	}
-
-	fmt.Print(res)
 	return nil
 }
 
@@ -571,24 +607,35 @@ func runCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 	}
-
-	prompt := generatePrompt(args, appCfg.Raw)
-
-	ctx, cancel := context.WithCancel(context.Background())
 	var res string
-	action := func() {
+	action := func(prompt string) {
 		res, err = pluginCfg.generateResponse(prompt, appCfg.Raw)
-		cancel()
 	}
 
-	go action()
-	_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Context(ctx).Run()
+	var prompt string
+
+	if appCfg.IteratorPrompt {
+		prompt := args[0]
+		var prompts []string
+		ps := strings.Trim(prompt, "[]")
+		prompts = strings.Split(ps, ",")
+		for _, p := range prompts {
+			_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Action(func() { action(p) }).Run()
+			fmt.Println(res)
+		}
+	} else {
+		prompt = generatePrompt(args, appCfg.Raw)
+
+		_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Action(func() { action(prompt) }).Run()
+	}
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Print(res)
+	if !appCfg.IteratorPrompt {
+		fmt.Print(res)
+	}
 	return nil
 }
 
