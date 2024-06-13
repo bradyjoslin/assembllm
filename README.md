@@ -13,6 +13,19 @@ A versatile CLI tool designed to combine multiple Large Language Models (LLMs) u
 - **Task Chaining**: Automate workflows by chaining multiple tasks where outputs of one feed into the next.
 - **Flexible Scripting**: Use pre- and post-scripts for data transformation and integration.
 
+## Installing
+
+```bash
+# install with brew
+brew tap bradyjoslin/assembllm
+brew install bradyjoslin/assembllm/assembllm
+
+# install with Go
+go install github.com/bradyjoslin/assembllm
+```
+
+Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assembllm/releases).
+
 ## Basic Usage
 
 ### Simple Commands
