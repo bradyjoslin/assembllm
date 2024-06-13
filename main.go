@@ -63,7 +63,7 @@ type Task struct {
 
 const (
 	configFileName = "config.yaml"
-	version        = "0.3.1"
+	version        = "0.4.0"
 )
 
 var (
@@ -505,24 +505,20 @@ func handleTasks(prompt string) error {
 			}
 		}
 
-		ctx, cancel := context.WithCancel(context.Background())
 		var res string
-		action := func() {
+		action := func(tasks Tasks) {
 			res, err = generateResponseForTasks(tasks)
 			if err != nil {
-				cancel()
 				fmt.Println(err)
 				os.Exit(1)
 			}
-			cancel()
 		}
 
-		go action()
-		_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Context(ctx).Run()
-
-		if err != nil {
-			return err
-		}
+		_ = spinner.New().
+			Title("Generating...").
+			TitleStyle(lipgloss.NewStyle().Faint(true)).
+			Action(func() { action(tasks) }).
+			Run()
 
 		fmt.Print(res)
 	}
@@ -613,20 +609,37 @@ func runCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	var prompt string
-
 	if appCfg.IteratorPrompt {
-		prompt := args[0]
+		if len(args) > 0 {
+			prompt = args[0]
+		} else {
+			huh.NewInput().
+				Title("Enter the prompts in brackets separated by commas:").
+				Value(&prompt).
+				Placeholder("[prompt1, prompt2]").
+				WithTheme(huh.ThemeCharm()).
+				Run()
+		}
 		var prompts []string
 		ps := strings.Trim(prompt, "[]")
 		prompts = strings.Split(ps, ",")
 		for _, p := range prompts {
-			_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Action(func() { action(p) }).Run()
+			_ = spinner.New().
+				Title("Generating...").
+				TitleStyle(lipgloss.NewStyle().Faint(true)).
+				Action(func() { action(p) }).
+				Run()
+
 			fmt.Println(res)
 		}
 	} else {
 		prompt = generatePrompt(args, appCfg.Raw)
 
-		_ = spinner.New().Title("Generating...").TitleStyle(lipgloss.NewStyle().Faint(true)).Action(func() { action(prompt) }).Run()
+		_ = spinner.New().
+			Title("Generating...").
+			TitleStyle(lipgloss.NewStyle().Faint(true)).
+			Action(func() { action(prompt) }).
+			Run()
 	}
 
 	if err != nil {
