@@ -1,35 +1,38 @@
 name: Hacker News Top Story Workflow
 description: |
   This workflow calls the RSS feed for hacker news, obtains the title and url of
-  the first story in the feed and sends it to perplexity to provide a summary 
-  and insight.
+  the first 5 stories in the feed, and sends them on by one to Perplexity's online
+  model which has up to date information.  The model provides a summary and
+  insight for each.  
+
+  Requires version 0.4.0 or later of the assembllm plugin.
+iterator_script: >
+  let rss = Get('https://news.ycombinator.com/rss');
+  split(rss, "<item>")[1:] 
+  | map(
+      join(
+        split(#, "<title>") 
+        | last()
+        | split("</title>")
+        | map(
+          split(#, "<link>") 
+          | last() + " --- "
+          | split("</link>") 
+          | first()
+        )
+      )
+    )
+  | take(5)
 
 tasks:
   - name: topic
-    pre_script: >
-      let rss = Get('https://news.ycombinator.com/rss');
-      split(rss, "<item>")[1:] 
-      | map(
-          join(
-            split(#, "<title>") 
-            | last()
-            | split("</title>")
-            | map(
-              split(#, "<link>") 
-              | last() + " --- "
-              | split("</link>") 
-              | first()
-            )
-          )
-        ) 
-      | first()
     plugin: perplexity
     prompt: |
       # Task Objective
 
       Give a detailed analysis of the topic supported by a URL source provided.
       Provide references, if available.  Include the URL provided at the end of
-      the summary.
+      the summary.  Response must be 250 words or less.
 
       ## Task Details
 
@@ -37,3 +40,10 @@ tasks:
       and weaknesses of their argument.  Where practical, think about how the topic
       can impact a person's daily life, or an industry long-term, or is it just
       passing information with little impact.
+    post_script: |
+      //
+      // Get the title from the rss feed input and add it to the top of the output
+      // as a markdown header.
+      //
+      let title = split(iterValue, "---") | first();
+      "# " + title + "\n" + input
