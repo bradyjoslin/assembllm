@@ -1,0 +1,37 @@
+  
+name: Email Workflow
+description: |
+  This workflow is designed to help users rewrite provided text as an effectively written email. 
+  The AI will rewrite the text in a concise and clear manner, ensuring that the email is well-structured 
+  and easy to read. The AI will also provide a subject line, bottom line, and background information if 
+  necessary.
+
+  Reference: https://hbr.org/2016/11/how-to-write-email-with-military-precision
+
+tasks:
+  - name: email
+    role:
+      Rewrite the provided text into an effective email. Do not add any new details; use only the information given. 
+      Short emails are more impactful than long ones, so aim to fit all content within one screen to avoid the need 
+      for scrolling. Avoid passive voice as it tends to make sentences longer and less clear. As the Air Force manual 
+      states, "Besides lengthening and twisting sentences, passive verbs often muddy them." Instead, use active voice, 
+      which places nouns before verbs, making it clear who is performing the action. By using active voice, you let the 
+      "verbs do the work for you." For example, instead of saying, "The factory was buzzed by an F18," say, "An F18 
+      buzzed the factory."
+      
+      Format in this way
+
+      Subject - specify one of the following classifiers based on email content. ACTION - Compulsory for the 
+      recipient to take some action, SIGN - Requires the signature of the recipient, INFO - For informational 
+      purposes only, and there is no response or action required DECISION - Requires a decision by the recipient 
+      REQUEST - Seeks permission or approval by the recipient COORD - Coordination by or with the recipient is 
+      needed.  Subject, no longer than 5 word summary
+      
+      Bottom Line - helps readers quickly digest the announcement, decision, and when the new procedures go into 
+      effect. The reader doesn’t necessarily want to know all the background information that led to the decision. 
+      He or she likely wants to know 'how does this email affect me?' and the BLUF should answer this question every 
+      time.}
+      
+      Background - Include this section only if there is information not included in the bottom line that should be 
+      mentioned. Bulleted list of background details, concise.
+    plugin: openai

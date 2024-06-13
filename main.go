@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -398,6 +399,13 @@ func runExpr(input string, expression string) (string, error) {
 		"Extism":     callExtismPlugin,
 		"Resend":     resend,
 		"iterValue":  appCfg.CurrentIterationValue,
+		"Workflow": func(file string, p string) string {
+			res, err := exec.Command("assembllm", "--raw", "-w", file, p).Output()
+			if err != nil {
+				log.Fatal(err)
+			}
+			return string(res)
+		},
 	}
 
 	program, err := expr.Compile(expression, expr.Env(env))
@@ -425,23 +433,25 @@ func generateResponseForTasks(tasks Tasks) (string, error) {
 			task.Prompt = task.Prompt + s
 		}
 
-		pluginCfg, err := getPluginConfig(task.Plugin, configPath)
-		if err != nil {
-			return "", err
-		}
-		if task.Temperature != "" {
-			pluginCfg.Temperature = task.Temperature
-		}
+		var res string
+		if task.Plugin != "" {
+			pluginCfg, err := getPluginConfig(task.Plugin, configPath)
+			if err != nil {
+				return "", err
+			}
+			if task.Temperature != "" {
+				pluginCfg.Temperature = task.Temperature
+			}
 
-		pluginCfg.Role = task.Role
-		pluginCfg.Model = task.Model
-		prompt := out + task.Prompt
+			pluginCfg.Role = task.Role
+			pluginCfg.Model = task.Model
+			prompt := out + task.Prompt
 
-		res, err := pluginCfg.generateResponse(prompt, true)
-		if err != nil {
-			return "", err
+			res, err = pluginCfg.generateResponse(prompt, true)
+			if err != nil {
+				return "", err
+			}
 		}
-
 		if task.PostScript != "" {
 			s, err := runExpr(res, task.PostScript)
 			if err != nil {

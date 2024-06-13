@@ -1,0 +1,21 @@
+name: workflow chaining example
+description: |
+  This example demonstrates chaining workflow files using the `Workflow` function available in 
+  pre-scripts and post-scripts. This goes beyond the single file task chaining capabilities, 
+  but allows you to modularize your workflows into separate files for better organization and 
+  reusability.
+
+  In this example, we perform market research using Perplexity, then use the results to call a
+  separate workflow that generates a email adherent to specific guidelines as the final output.
+
+tasks:
+  - name: investor coorespondence
+    plugin: perplexity
+    prompt: |
+      Perform research on the latest products announced by Apple, specifically whether they plan
+      to release anything related to password management.  If so, that may put significant pressure
+      on companies like 1Password and LastPass.  Write a summary of your findings, including any
+      potential impact on the password management industry.  If there is news on this front, suggest
+      a meeting next Friday to discuss the implications.
+    post_script: |
+      Workflow("./workflows/email.yaml", input)
