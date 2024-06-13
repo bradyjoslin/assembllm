@@ -8,10 +8,12 @@ A versatile CLI tool designed to combine multiple Large Language Models (LLMs) u
 
 ### Key Features:
 
+- **Flexible Scripting**: Use pre- and post-scripts for data transformation and integration.
+- **Prompt Iteration**: Provide an array of prompts that execute sequentially.
+- **Task Chaining**: Chaining multiple tasks into workflows, where outputs of each task feed into the next.
+- **Workflow Chaining**: Workflows can call other workflows, allowing you to break down complex operations into smaller, reusable chunks and dynamically link them together.
 - **Multi-Model Support**: Integrates with [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), and [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation), among others.
 - **Plugin Architecture**: Extensible via WebAssembly plugins written in a variety of languages, including JavaScript, Rust, Go, and C#, using [Extism](https://extism.org/).
-- **Task Chaining**: Automate workflows by chaining multiple tasks where outputs of one feed into the next.
-- **Flexible Scripting**: Use pre- and post-scripts for data transformation and integration.
 
 ## Installing
 
