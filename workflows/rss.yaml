@@ -1,8 +1,8 @@
 name: RSS Article Summarizer
 description: |
   This workflow calls an RSS feed sent in as a prompt, obtains the title and url of
-  the first 5 stories in the feed, and sends calls an external workflow that provides
-  a summary.  Then an post script adds output formatting by adding the title from the
+  the first 5 stories in the feed, and  calls an external workflow that provides
+  a summary.  Then a post script adds output formatting by adding the title from the
   rss feed as a markdown header above the response.
 
 iterator_script: |
