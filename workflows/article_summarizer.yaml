@@ -1,0 +1,21 @@
+name: article summary and analysis
+description: |
+  Optimized for taking an article's title and URL as a prompt and providing an 
+  effective summary using Perplexity's Online model, which contains up to date 
+  information.
+
+tasks:
+  - plugin: perplexity
+    prompt: |
+      # Task Objective
+
+      Give a detailed analysis of the topic supported by a URL source provided.
+      Provide references, if available.  Include the URL provided at the end of
+      the summary.  Response must be 250 words or less.
+
+      ## Task Details
+
+      Be insightful. Think about the author's claims deeply and express the strengths
+      and weaknesses of their argument.  Where practical, think about how the topic
+      can impact a person's daily life, or an industry long-term, or is it just
+      passing information with little impact.
