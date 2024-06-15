@@ -36,7 +36,7 @@ iterator_script: |
 tasks:
   - post_script: |
       // Call an article summarization workflow.
-      let res = Workflow("./workflows/article_summarizer.yaml", iterValue);
+      let res = Workflow("article_summarizer.yaml", iterValue);
 
       // Current iterValue is retained across tasks.  We use it to form a summary header.
       let title = split(iterValue, "---") | first();
