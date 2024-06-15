@@ -18,3 +18,10 @@ completion-plugins:
     accountId: CF_ACCOUNT_ID
     url: api.cloudflare.com
     model: llama-2-7b
+  - name: anthropic
+    source: https://github.com/bradyjoslin/assembllm-anthropic-go/releases/latest/download/assembllm-anthropic-go.wasm
+    hash: 
+    apiKey: ANTHROPIC_API_KEY
+    url: api.anthropic.com
+    model: claude-3-opus-20240229
+    wasi: true
