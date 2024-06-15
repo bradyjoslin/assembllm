@@ -18,4 +18,4 @@ tasks:
       potential impact on the password management industry.  If there is news on this front, suggest
       a meeting next Friday to discuss the implications.
     post_script: |
-      Workflow("./workflows/email.yaml", input)
+      Workflow("email.yaml", input)
