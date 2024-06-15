@@ -17,24 +17,6 @@ type Model struct {
 	Aliases []string `json:"aliases"`
 }
 
-type CompletionPluginConfig struct {
-	Name        string `yaml:"name"`
-	Source      string `yaml:"source"`
-	Hash        string `yaml:"hash"`
-	APIKey      string `yaml:"apiKey"`
-	AccountId   string `yaml:"accountId"`
-	URL         string `yaml:"url"`
-	Model       string `yaml:"model"`
-	Temperature string `yaml:"temperature"`
-	Role        string `yaml:"role"`
-	Wasi        bool   `yaml:"wasi"`
-	LogLevel    extism.LogLevel
-}
-
-type CompletionPluginConfigs struct {
-	Plugins []CompletionPluginConfig `yaml:"completion-plugins"`
-}
-
 type CompletionsPlugin struct {
 	Plugin extism.Plugin
 }
