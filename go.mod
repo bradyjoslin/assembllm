@@ -5,6 +5,7 @@ go 1.22.3
 require (
 	github.com/charmbracelet/lipgloss v0.11.0
 	github.com/extism/go-sdk v1.2.0
+	github.com/yuin/goldmark v1.5.4
 )
 
 require (
@@ -40,7 +41,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	github.com/yuin/goldmark v1.5.4 // indirect
 	github.com/yuin/goldmark-emoji v1.0.2 // indirect
 	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect

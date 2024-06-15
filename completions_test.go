@@ -6,7 +6,7 @@ import (
 )
 
 func shouldSkip() bool {
-    return os.Getenv("SKIP_CHAT_RESPONSE_TESTS") == "true"
+	return os.Getenv("SKIP_CHAT_RESPONSE_TESTS") == "true"
 }
 
 func TestBadConfigFilePath(t *testing.T) {
@@ -21,7 +21,7 @@ func TestBadConfigFilePath(t *testing.T) {
 func TestGetNonExistentPluginConfig(t *testing.T) {
 	t.Parallel()
 
-	_, err := getPluginConfig("", configPath)
+	_, err := getPluginConfig("", "config.yaml")
 	if err == nil {
 		t.Fatalf("expected error, got nil")
 	}
@@ -32,7 +32,7 @@ func TestGetPluginConfig(t *testing.T) {
 
 	want := "openai"
 
-	pluginCfg, err := getPluginConfig(want, configPath)
+	pluginCfg, err := getPluginConfig(want, "config.yaml")
 	if err != nil {
 		t.Fatalf("expected nil, got %v", err)
 	}
@@ -47,7 +47,7 @@ func TestGetPluginConfig(t *testing.T) {
 func TestGetModels(t *testing.T) {
 	t.Parallel()
 
-	pluginCfg, err := getPluginConfig("openai", configPath)
+	pluginCfg, err := getPluginConfig("openai", "config.yaml")
 	if err != nil {
 		t.Fatalf("expected nil, got %v", err)
 	}
@@ -64,12 +64,12 @@ func TestGetModels(t *testing.T) {
 
 func TestGetResponse(t *testing.T) {
 	t.Parallel()
-	
+
 	if shouldSkip() {
 		t.Skip("Skipping this test")
 	}
 
-	pluginCfg, err := getPluginConfig("openai", configPath)
+	pluginCfg, err := getPluginConfig("openai", "config.yaml")
 	if err != nil {
 		t.Fatalf("expected nil, got %v", err)
 	}
