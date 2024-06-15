@@ -390,6 +390,27 @@ func resend(to string, from string, subject string, body string) error {
 	return nil
 }
 
+func workflowChain(path string, p string) (string, error) {
+	var absPath string
+	workflowDir := filepath.Dir(appCfg.WorkflowPath)
+
+	// Join workflowDir with the provided path
+	joinedPath := filepath.Join(workflowDir, path)
+
+	// Convert joinedPath to an absolute path
+	absPath, err := filepath.Abs(joinedPath)
+	if err != nil {
+		return "", fmt.Errorf("error loading workflow, check filepath: %v", err)
+	}
+
+	// Use absPath
+	res, err := exec.Command("assembllm", "--raw", "-w", absPath, p).Output()
+	if err != nil {
+		return "", fmt.Errorf("error loading workflow, check filepath: %v", err)
+	}
+	return string(res), nil
+}
+
 func runExpr(input string, expression string) (string, error) {
 	env := map[string]interface{}{
 		"input":      input,
@@ -399,13 +420,7 @@ func runExpr(input string, expression string) (string, error) {
 		"Extism":     callExtismPlugin,
 		"Resend":     resend,
 		"iterValue":  appCfg.CurrentIterationValue,
-		"Workflow": func(file string, p string) string {
-			res, err := exec.Command("assembllm", "--raw", "-w", file, p).Output()
-			if err != nil {
-				log.Fatal(err)
-			}
-			return string(res)
-		},
+		"Workflow":   workflowChain,
 	}
 
 	program, err := expr.Compile(expression, expr.Env(env))
