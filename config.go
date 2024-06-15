@@ -69,11 +69,12 @@ func writeConfig(configDataUpdates []byte, configPath string) {
 }
 
 func getConfigPath() string {
-	configDir, err := os.UserConfigDir()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatalf("Unable to get user config directory: %v", err)
+		log.Fatalf("Unable to get user's home directory: %v", err)
 	}
-	configPath := filepath.Join(configDir, "."+appName, configFileName)
+
+	configPath := filepath.Join(homeDir, "."+appName, configFileName)
 	return configPath
 }
 
