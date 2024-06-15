@@ -4,24 +4,24 @@ completion-plugins:
     hash: 
     apiKey: OPENAI_API_KEY
     url: api.openai.com
-    model: 4o
+    model: 
   - name: perplexity
     source: https://github.com/bradyjoslin/assembllm-perplexity/releases/latest/download/assembllm_perplexity.wasm
     hash: 
     apiKey: PERPLEXITY_API_KEY
     url: api.perplexity.ai
-    model: llam3-sso
+    model: 
   - name: cloudflare
     source: https://github.com/bradyjoslin/assembllm-cloudflare/releases/latest/download/assembllm_cloudflare.wasm
     hash: 
     apiKey: WORKERS_AI_TOKEN
     accountId: CF_ACCOUNT_ID
     url: api.cloudflare.com
-    model: llama-2-7b
+    model: 
   - name: anthropic
     source: https://github.com/bradyjoslin/assembllm-anthropic-go/releases/latest/download/assembllm-anthropic-go.wasm
     hash: 
     apiKey: ANTHROPIC_API_KEY
     url: api.anthropic.com
-    model: claude-3-opus-20240229
+    model: 
     wasi: true
