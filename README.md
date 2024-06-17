@@ -12,7 +12,7 @@ A versatile CLI tool designed to combine multiple Large Language Models (LLMs) u
 - **Prompt Iteration**: Provide an array of prompts that execute sequentially.
 - **Task Chaining**: Chaining multiple tasks into workflows, where outputs of each task feed into the next.
 - **Workflow Chaining**: Workflows can call other workflows, allowing you to break down complex operations into smaller, reusable chunks and dynamically link them together.
-- **Function Calling**: Convert unstructured prompts to structured data with OpenAI and Anthropic.
+- **Function / Tool Calling**: Convert unstructured prompts to structured data with OpenAI and Anthropic.
 - **Multi-Model Support**: Available plugins for [OpenAI](https://platform.openai.com/docs/guides/text-generation/chat-completions-api), [Perplexity](https://docs.perplexity.ai/), [Cloudflare AI](https://developers.cloudflare.com/workers-ai/models/#text-generation), and [Anthropic](https://docs.anthropic.com/en/docs/intro-to-claude).
 - **Plugin Architecture**: Extensible via WebAssembly plugins written in a variety of languages, including JavaScript, Rust, Go, and C#, using [Extism](https://extism.org/).
 
