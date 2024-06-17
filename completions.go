@@ -21,6 +21,34 @@ type CompletionsPlugin struct {
 	Plugin extism.Plugin
 }
 
+type Property struct {
+	Type        string   `json:"type" yaml:"type"`
+	Description string   `json:"description" yaml:"description"`
+	Enum        []string `json:"enum,omitempty" yaml:"enum,omitempty"`
+}
+
+type Schema struct {
+	Type       string              `json:"type" yaml:"type"`
+	Properties map[string]Property `json:"properties" yaml:"properties"`
+	Required   []string            `json:"required" yaml:"required"`
+}
+
+type Tool struct {
+	Name        string `json:"name" yaml:"name"`
+	Description string `json:"description" yaml:"description"`
+	InputSchema Schema `json:"input_schema" yaml:"input_schema"`
+}
+
+type Message struct {
+	Role    string `json:"role" yaml:"role"`
+	Content string `json:"content" yaml:"content"`
+}
+
+type Request struct {
+	Tools    []Tool    `json:"tools" yaml:"tools"`
+	Messages []Message `json:"messages" yaml:"messages"`
+}
+
 // Get the available models from the completions plugin
 func (pluginCfg CompletionPluginConfig) getModels() ([]string, error) {
 	plugin, err := pluginCfg.createPlugin()
@@ -34,6 +62,20 @@ func (pluginCfg CompletionPluginConfig) getModels() ([]string, error) {
 	}
 
 	return modelNames, nil
+}
+
+func (pluginInfo CompletionPluginConfig) generateResponseWithTools(prompt string, tools []Tool) (string, error) {
+	plugin, err := pluginInfo.createPlugin()
+	if err != nil {
+		return "", fmt.Errorf("failed to initialize plugin: %v", err)
+	}
+
+	_, out, err := plugin.completionWithTools(prompt, tools)
+	if err != nil {
+		return "", fmt.Errorf("failed to get completion: %v", err)
+	}
+
+	return string(out), nil
 }
 
 // Get completions response for the prompt from the completions plugin
@@ -125,6 +167,25 @@ func (plugin *CompletionsPlugin) models() (uint32, []byte, error) {
 // Get completions for the prompt
 func (plugin *CompletionsPlugin) completion(prompt string) (uint32, []byte, error) {
 	return plugin.Call("completion", []byte(prompt))
+}
+
+func (plugin *CompletionsPlugin) completionWithTools(prompt string, tools []Tool) (uint32, []byte, error) {
+	request := Request{
+		Tools: tools,
+		Messages: []Message{
+			{
+				Role:    "user",
+				Content: prompt,
+			},
+		},
+	}
+
+	data, err := json.Marshal(request)
+	if err != nil {
+		return 0, nil, err
+	}
+
+	return plugin.Call("completionWithTools", data)
 }
 
 // Get a plugin configuration from the available plugins

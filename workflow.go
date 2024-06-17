@@ -29,6 +29,7 @@ type Task struct {
 	Temperature string `yaml:"temperature"`
 	PreScript   string `yaml:"pre_script"`
 	PostScript  string `yaml:"post_script"`
+	Tools       []Tool `yaml:"tools,omitempty"`
 }
 
 func getAbsolutePath(path string) (string, error) {
@@ -77,9 +78,17 @@ func generateResponseForTasks(tasks Tasks) (string, error) {
 			pluginCfg.Model = task.Model
 			prompt := out + task.Prompt
 
-			res, err = pluginCfg.generateResponse(prompt, true)
-			if err != nil {
-				return "", err
+			if task.Tools != nil {
+				res, err = pluginCfg.generateResponseWithTools(prompt, task.Tools)
+				if err != nil {
+					return "", err
+				}
+			} else {
+
+				res, err = pluginCfg.generateResponse(prompt, true)
+				if err != nil {
+					return "", err
+				}
 			}
 		}
 

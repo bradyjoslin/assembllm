@@ -1,0 +1,35 @@
+name: Sentiment Analysis Workflow
+description: |
+  Uses the OpenAI tools / function calling capability that takes unstructured prompt text
+  and returns structured data, in this case in the form of sentiment scores.
+
+  Also compatible with the Anthropic plugin.
+
+tasks:
+  - name: print_sentiment_scores
+    plugin: openai
+    description: Prints the sentiment scores of a given text.
+    tools: 
+      - name: sentiment_scores
+        description: provide sentiment scores based on input
+        input_schema: 
+          type: object
+          properties: 
+            positive_score: 
+              type: number
+              description: The positive sentiment score, ranging from 0.0 to 1.0.
+            negative_score: 
+              type: number
+              description: The negative sentiment score, ranging from 0.0 to 1.0.
+            neutral_score: 
+              type: number
+              description: The neutral sentiment score, ranging from 0.0 to 1.0.
+          required: 
+            - positive_score
+            - negative_score
+            - neutral_score
+    prompt: |
+      After a long week of hard work and challenges, it feels incredibly rewarding to see 
+      our team's efforts pay off with such remarkable results. The support from our colleagues 
+      was instrumental in overcoming the hurdles we faced. Although there were moments of doubt 
+      and stress, the overall experience has been positive and fulfilling.
