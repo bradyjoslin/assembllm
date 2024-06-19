@@ -1,0 +1,40 @@
+name: weather
+description: |
+  Uses tools / function calling capability that takes unstructured prompt text and returns structured data, 
+  which we use to call an api to get the weather forecast for a given location. We then feed the API response 
+  into a new task, providing the original prompt and API response for context, getting a response contextualized 
+  with weather data.
+
+  Also compatible with the Anthropic plugin.
+iterator_script: |
+  [input]
+
+tasks:
+  - name: weather
+    plugin: openai
+    tools:
+      - name: weather
+        description: Get the current weather
+        input_schema:
+          type: object
+          properties:
+            location:
+              type: string
+              description: The city and state, e.g. San Francisco CA
+            units:
+              type: string
+              description: The temperature unit to use. Infer this from the users location. e.g. F or C.
+          required:
+            - location
+            - units
+    post_script: |
+      let jsonIn = input | fromJSON();
+      let location = jsonIn[0].input.location;
+      let formattedLocation = replace(location, " ", "+") | replace(",", "");
+      let units = jsonIn[0].input.units == "F" ? "u" : "";
+      Get("https://wttr.in/" + formattedLocation + "?A" + units)
+
+  - name: weather_response
+    plugin: openai
+    pre_script: |
+      "The user asked: " + iterValue + ", we used a tool to find data to help answer, please summarize for them: " + input
