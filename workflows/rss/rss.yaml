@@ -10,10 +10,10 @@ iterator_script: |
   let rss = Get(input);
 
   // Split the feed into items
-  let items = split(rss, "<item>")[1:];
+  let items = split(rss, "<item>")[1:6];
 
   // Get the titles and links from the items as 'TITLE --- URL'
-  let titlesAndLinks = items | map(
+  items | map(
       join(
         split(#, "<title>") 
         | last()
@@ -25,18 +25,12 @@ iterator_script: |
           | first()
        )
      )
-  );
-
-  // Take the first 5
-  let top5 = titlesAndLinks | take(5);
-
-  // Output the top 5
-  top5
+  )
 
 tasks:
   - post_script: |
       // Call an article summarization workflow.
-      let res = Workflow("article_summarizer.yaml", iterValue);
+      let res = Workflow("../article_summarizer.yaml", iterValue);
 
       // Current iterValue is retained across tasks.  We use it to form a summary header.
       let title = split(iterValue, "---") | first();
