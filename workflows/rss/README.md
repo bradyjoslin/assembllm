@@ -56,7 +56,7 @@ For the URL https://news.ycombinator.com/rss, the output would be a list like:
 [
   "Agricultural drones are transforming rice farming in the Mekong River delta --- https://hakaimagazine.com/videos-visuals/rice-farming-gets-an-ai-upgrade/",
   "1\25-scale Cray C90 wristwatch --- http://www.chrisfenton.com/1-25-scale-cray-c90-wristwatch/",
-  "Please don't mention AI again --- https://ludic.mataroa.blog/blog/i-will-fucking-piledrive-you-if-you-mention-ai-again/",
+  "How We Made the Deno Language Server Ten Times Faster --- https://deno.com/blog/optimizing-our-lsp",
   "Autonomous vehicles are great at driving straight --- https://spectrum.ieee.org/autonomous-vehicles-great-at-straights",
   "What happens to our breath when we type, tap, scroll --- https://www.npr.org/2024/06/10/1247296780/screen-apnea-why-screens-cause-shallow-breathing"
 ]
