@@ -56,14 +56,21 @@ tasks:
             - units
 ```
 
-At this stage a reponse to "heading to the beach tomorrow in grand cayman, should i expect a full day of sun?" would look something like:
+At this stage a reponse to "driving from houston to hot springs today, interested in expected driving conditions" would look something like:
 
 ```json
 [
   {
     "input": {
-      "location": "Grand Cayman",
-      "units": "C"
+      "location": "Houston, TX",
+      "units": "F"
+    },
+    "name": "weather"
+  },
+  {
+    "input": {
+      "location": "Hot Springs, AR",
+      "units": "F"
     },
     "name": "weather"
   }
@@ -72,7 +79,7 @@ At this stage a reponse to "heading to the beach tomorrow in grand cayman, shoul
 
 ### Step 3
 
-A post script is defined immediately after the tools call which parses the structured data response.    
+A post script is defined immediately after the tools call which parses the structured data response.  We use an [Expr map function](https://expr-lang.org/docs/language-definition#map) because we receive a JSON array response from OpenAPI, which allows handling responses that contain multiple locations.
 
 ```yaml
     post_script: |
