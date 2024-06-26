@@ -1,4 +1,4 @@
-# RSS Workflow Example
+# Weather Workflow Example
 
 **Overview**
 
