@@ -29,10 +29,13 @@ tasks:
             - units
     post_script: |
       let jsonIn = input | fromJSON();
-      let location = jsonIn[0].input.location;
-      let formattedLocation = replace(location, " ", "+") | replace(",", "");
-      let units = jsonIn[0].input.units == "F" ? "u" : "";
-      Get("https://wttr.in/" + formattedLocation + "?A" + units)
+      map(jsonIn, {
+        let location = .input.location;
+        let units = .input.units;
+        let formattedLocation = replace(location, " ", "+") | replace(",", "");
+        let unitOption = units == "F" ? "u" : "";
+        Get("https://wttr.in/" + formattedLocation + "?dA" + unitOption)
+      })
 
   - name: weather_response
     plugin: openai
