@@ -1,5 +1,9 @@
 # Examples
 
-RSS Workflow Example ([details](./rss/README.md)):
+RSS ([details](./rss/README.md)):
 
 ![RSS](./rss/rss.gif)
+
+Weather ([details](./weather/)):
+
+![Weather](./weather/weather.gif)
