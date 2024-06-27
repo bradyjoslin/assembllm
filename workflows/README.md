@@ -1,9 +1,9 @@
-# Examples
+# Example Workflows
 
 RSS ([details](./rss/README.md)):
 
-![RSS](./rss/rss.gif)
+<img src="rss/rss.gif" width="800px">
 
 Weather ([details](./weather/)):
 
-![Weather](./weather/weather.gif)
+<img src="weather/weather.gif" width="800px">
