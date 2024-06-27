@@ -99,6 +99,51 @@ Run this workflow with:
 
 After running the above workflow, you can expect as outputs a detailed blog post saved to a file and sent as an email, and a concise summary printed to stdout.
 
+### Workflow Architecture
+
+This is a high level overview of the flow of prompt and response data through the various components available within a workflow.  
+
+- An IterationScript is optional, and if included defines an array of prompt data where each value is looped through the task chain.
+- A workflow can have one or more tasks.
+- A task can optionally include a PreScript, LLM CAll, and/or a PostScript.
+- A task can call a separate workflow in its PreScript or PostScript for modularity.
+
+```mermaid
+stateDiagram-v2
+direction LR
+    [*] --> Workflow
+        state Workflow {
+        direction LR
+        IterationScript --> Tasks
+            state Tasks {
+            direction LR
+                state Task(1) {
+                    LLMCall : LLM Call
+                    PreScript --> LLMCall
+                    LLMCall --> PostScript
+                }
+                Task(1) --> Task(2)
+                state Task(2) {
+                    PreScript2 : PreScript
+                    LLMCall2 : LLM Call
+                    PostScript2 : PostScript
+                    PreScript2 --> LLMCall2
+                    LLMCall2 --> PostScript2
+                }
+                Task(2) --> Task(n...)
+                state Task(n...) {
+                    PreScriptn : PreScript
+                    LLMCalln : LLM Call
+                    PostScriptn : PostScript
+                    PreScriptn --> LLMCalln
+                    LLMCalln --> PostScriptn
+                }                
+            }
+        Tasks --> IterationScript
+        }
+    Workflow -->  [*]
+```
+
 ### Workflow Prompts
 
 Workflows in `assembllm` can optionally take a prompt from either standard input (stdin) or as an argument. The provided input is integrated into the prompt defined in the first task of the workflow.
