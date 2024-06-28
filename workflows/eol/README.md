@@ -2,7 +2,7 @@
 
 **Overview**
 
-[This workflow](./tools_eol.yaml) uses tools / function calling capability that takes unstructured prompt text and returns structured data, which we use to call an api to get product lifecycle / end of life information. We then feed the API response into a new task, providing the original prompt and API response for context, getting a response contextualized response.
+[This workflow](./tools_eol.yaml) uses tools / function calling capability that takes unstructured prompt text and returns structured data, which we use to call an api to get product lifecycle / end of life information. We then feed the API response into a new task, providing the original prompt and API response for context to provide an answer.
 
 **Sample Output**:
 
