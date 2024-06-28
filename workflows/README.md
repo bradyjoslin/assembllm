@@ -7,3 +7,7 @@ RSS ([details](./rss/README.md)):
 Weather ([details](./weather/)):
 
 <img src="weather/weather.gif" width="800px">
+
+End of Life ([details](./eol/)):
+
+<img src="eol/eol.gif" width="800px">
