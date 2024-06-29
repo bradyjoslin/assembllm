@@ -1,4 +1,4 @@
-# Scrape and Summarize Workflow Example
+# Scrape then Summarize Workflow Example
 
 **Overview**
 
