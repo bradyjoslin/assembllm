@@ -1,0 +1,27 @@
+name: "Scrape"
+description: |
+  Get the contents of a remote URL, then scrape the contents of a specified selector using HTML Tools, an Extism-based wasm plug-in.
+
+  Takes a json array of objects with the following keys:
+  - url: The URL to scrape
+  - selector: The CSS selector to scrape
+
+  Sample usage:
+  assembllm -w scrape.yaml '[{"url": "https://bradyjoslin.com/blog/remote-vs-code/", "selector": "div.post-content"}]'
+
+iterator_script: |
+  input | fromJSON()
+
+tasks:
+  - name: scrape
+    post_script: |
+      let wasm = "https://github.com/bradyjoslin/assembllm-htmltools/releases/latest/download/assembllm-htmltools.wasm";
+      let content = Get(iterValue.url);
+      let params = (
+        {
+          "html": content, 
+          "selector": iterValue.selector
+        } 
+        | toJSON()
+      );
+      Extism(wasm, "scraper", params)
