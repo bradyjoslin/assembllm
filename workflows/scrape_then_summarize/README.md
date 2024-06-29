@@ -10,7 +10,7 @@ Takes a json array of objects with the following keys:
 
 **Sample Output**:
 
-![scrape summarize gif](scrape_then_summarize.gif)
+<img src="scrape_then_summarize.gif" width="700px">
 
 **Usage**
 
@@ -22,7 +22,9 @@ assembllm -w scrape_then_summarize.yaml '[{"url": "https://bradyjoslin.com/blog/
 
 ## Workflow
 
-The entire workflow simply calls two workflows, one to scrape content from a web page, the other to provide the summary:
+The entire workflow simply calls two workflows, one to scrape content from a web page, the other to provide the summary.  Since we want to generate task output using scripting in a task that doesn't call an LLM plug-in directly, we do so by defining an iterator script to hold the prompt state, and reference the `iterValue` in a post script, which generates the task output.
+
+> **Explanation**: Pre scripts are used to manipulate the prompt input that is provided to the LLM call in a task.  Post script are used to manipulate the results from the LLM plugin.  We can define a post script in the absence of an LLM call in a task.  Without an LLM call step, there will be no input sent to the post script.  However, the `iterValue` from an iterator script is available in pre and post scripts, useful for these types of script-only tasks.
 
 ```yaml
 # scrape_then_summarize.yaml
