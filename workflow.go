@@ -46,7 +46,7 @@ func workflowChain(path string, p string) (string, error) {
 
 	res, err := exec.Command("assembllm", "--raw", "-w", absPath, p).Output()
 	if err != nil {
-		return "", fmt.Errorf("error loading workflow: %v\n%v\n%v", absPath, string(res), err)
+		return "", fmt.Errorf("error loading workflow, check filepath: %v", err)
 	}
 	return string(res), nil
 }
