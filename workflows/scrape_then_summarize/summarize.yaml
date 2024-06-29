@@ -1,0 +1,18 @@
+name: article summary and analysis
+description: |
+  Optimized for taking an article's content and providing an effective summary 
+
+tasks:
+  - plugin: anthropic
+    prompt: |
+      # Task Objective
+
+      Give a detailed analysis of the topic supported content provided. Response must 
+      be 250 words or less.
+
+      ## Task Details
+
+      Be insightful. Think about the author's claims deeply and express the strengths
+      and weaknesses of their argument.  Where practical, think about how the topic
+      can impact a person's daily life, or an industry long-term, or is it just
+      passing information with little impact.
