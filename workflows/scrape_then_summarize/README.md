@@ -1,8 +1,8 @@
-# End of Life Workflow Example
+# Scrape and Summarize Workflow Example
 
 **Overview**
 
-[scrape_then_summarize.yaml](./scrape_then_summarize.yaml) uses workflow chaining to compose a workflow that scrapes a URL and then summarizes the content.
+[scrape_then_summarize.yaml](./scrape_then_summarize.yaml) uses workflow chaining and [Assembllm HTML Tools](https://github.com/bradyjoslin/assembllm-htmltools) to compose a workflow that scrapes a URL and then summarizes the content.
 
 Takes a json array of objects with the following keys:
 - **url**: The URL to scrape
