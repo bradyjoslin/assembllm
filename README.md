@@ -105,7 +105,7 @@ This is a high level overview of the flow of prompt and response data through th
 
 - An IterationScript is optional, and if included defines an array of prompt data where each value is looped through the task chain.
 - A workflow can have one or more tasks.
-- A task can optionally include a PreScript, LLM CAll, and/or a PostScript.
+- A task can optionally include a PreScript, LLM Call, and/or a PostScript.
 - A task can call a separate workflow in its PreScript or PostScript for modularity.
 
 ```mermaid
@@ -201,9 +201,9 @@ In addition to all of the functionality provided by Expr, these functions are av
 
 In addition to these functions, an `input` variable is provided with the contents of the prompt at that stage of the chain.
 
-A `pre_script` is run before sending the prompt to the LLM.  The output of a `pre_script` is appended to the prompt at that stage of the chain.
+A `pre_script` is used to manipulate the provided prompt input prior to the LLM call. The prompt value in a `pre-script` can be referenced with using `input` variable.  The output of a `pre_script` is appended to the prompt and sent to the LLM.
 
-A `post_script` is run after sending the prompt to the LLM, therefore the `input` value availabe is the LLM's response.  Unlike a `pre_script`, a `post_script`'s output *replaces* instead of appends to the prompt at that stage of the chain, so if you would like to pass the prompt along from a `post_script`, you must do so explicitly.  For example, if you'd like to write the current LLM results to a file and also pass those results to the next LLM: 
+A `post_script` is run after sending the prompt to the LLM, and is used to manipulate the results from the LLM plugin. Therefore the `input` value availabe is the LLM's response.  Unlike a `pre_script`, a `post_script`'s output *replaces* instead of appends to the prompt at that stage of the chain, so if you would like to pass the prompt along from a `post_script`, you must do so explicitly.  For example, if you'd like to write the current LLM results to a file and also pass those results to the next LLM: 
 
 ```yml
 ...
@@ -313,6 +313,10 @@ To be compatible with `assembllm`, each plugin must expose two functions via the
 - **Models**: provides a list of models supported by the plug-in
 - **Completion**: takes a string prompt and returns a completions response
 
+Optionally, a plugin that supports tool / function calling can export:
+
+- **completionWithTools**: takes JSON input defining one or many tools and a prompt and returns structured data
+
 ### models Function
 
 A `models` function should be exported by the plug-in and return an array of models supported by the LLM. Each object has the following properties:
@@ -374,3 +378,73 @@ The plug-in is also provided configuration data from the `assembllm` host:
 - `model`: LLM model to use for completions response
 - `temperature`: temperature value for the completion response
 - `role`: prompt to use as the system message for the prompt
+
+### completionWithTools Function
+
+A `completionWithTools` function can be exported by the plug-in that takes tools definitions and a message with a prompt.
+
+The structure of the JSON looks like:
+
+```json
+{
+  "tools": [
+    {
+      "name": "tool_name",
+      "description": "A brief description of what the tool does",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "property_name_1": {
+            "type": "data_type",
+            "description": "Description of property_name_1"
+          },
+          "property_name_2": {
+            "type": "data_type",
+            "description": "Description of property_name_2"
+          }
+          // Additional properties as needed
+        },
+        "required": [
+          "property_name_1",
+          "property_name_2"
+          // Additional required properties as needed
+        ]
+      }
+    }
+    // Additional tools as needed
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "prompt"
+    }
+  ]
+}
+```
+
+Example:
+
+```json
+{
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get the current weather in a given location",
+      "input_schema": {
+          "type": "object",
+          "properties": {
+            "location": {
+                "type": "string",
+                "description": "The city and state, e.g. San Francisco, CA"
+            },
+            "unit": {
+              "type": "string",
+              "description": "The unit of temperature, always celsius"
+            }
+        },
+        "required": ["location", "unit"]
+      }
+    }
+  ],
+  "messages": [{"role": "user","content": "What is the weather like in San Francisco?"}]
+}
