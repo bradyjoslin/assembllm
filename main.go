@@ -37,7 +37,7 @@ type AppConfig struct {
 }
 
 const (
-	version = "0.6.1"
+	version = "0.7.0"
 )
 
 var (
