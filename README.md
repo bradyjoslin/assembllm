@@ -31,6 +31,28 @@ Or grab a pre-built binary from [releases](https://github.com/bradyjoslin/assemb
 
 ## Basic Usage
 
+```text
+A WASM plug-in based CLI for AI chat completions
+
+Usage:
+  assembllm [prompt] [flags]
+
+Flags:
+  -p, --plugin string        The name of the plugin to use (default "openai")
+  -P, --choose-plugin        Choose the plugin to use
+  -m, --model string         The name of the model to use
+  -M, --choose-model         Choose the model to use
+  -t, --temperature string   The temperature to use
+  -r, --role string          The role to use
+      --raw                  Raw output without formatting
+  -v, --version              Print the version
+  -w, --workflow string      The path to a workflow file
+  -W, --choose-workflow      Choose a workflow to run
+  -i, --iterator             String array of prompts ['prompt1', 'prompt2']
+  -f, --feedback             Optionally provide feedback and rerun workflow
+  -h, --help                 help for assembllm
+```
+
 ### Simple Commands
 
 You can quickly utilize the power of LLMs with simple commands and integrate assembllm with other tools via bash pipes for enhanced functionality:
