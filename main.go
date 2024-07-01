@@ -33,6 +33,7 @@ type AppConfig struct {
 	WorkflowPath          string
 	IteratorPrompt        bool
 	CurrentIterationValue interface{}
+	Feedback              bool
 }
 
 const (
@@ -91,6 +92,7 @@ func initializeFlags(app *App) {
 	flags.StringVarP(&appCfg.WorkflowPath, "workflow", "w", "", "The path to a workflow file")
 	flags.BoolVarP(&appCfg.ChooseWorkflow, "choose-workflow", "W", false, "Choose a workflow to run")
 	flags.BoolVarP(&appCfg.IteratorPrompt, "iterator", "i", false, "String array of prompts ['prompt1', 'prompt2']")
+	flags.BoolVarP(&appCfg.Feedback, "feedback", "f", false, "Optionally provide feedback and rerun workflow")
 	flags.SortFlags = false
 }
 
