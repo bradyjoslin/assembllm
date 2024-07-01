@@ -8,6 +8,7 @@ import (
 	"reflect"
 
 	"github.com/charmbracelet/glamour"
+	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/expr-lang/expr"
@@ -146,6 +147,7 @@ func handleTasks(prompt string) error {
 		tasks.IterationValues = output.([]interface{})
 	}
 
+	var res string
 	for i := range tasks.IterationValues {
 		appCfg.CurrentIterationValue = tasks.IterationValues[i]
 
@@ -155,7 +157,6 @@ func handleTasks(prompt string) error {
 			}
 		}
 
-		var res string
 		action := func(tasks Tasks) {
 			res, err = generateResponseForTasks(tasks)
 			if err != nil {
@@ -172,6 +173,18 @@ func handleTasks(prompt string) error {
 
 		fmt.Print(res)
 	}
+
+	if appCfg.Feedback {
+		var rerun bool
+		huh.NewConfirm().Title("Would you like to provide feedback and rerun the workflow?").Value(&rerun).Run()
+
+		if rerun {
+			var feedback string
+			huh.NewInput().Title("Provide your feedback or follow-up question:").Value(&feedback).Run()
+			return handleTasks("you were prompted with " + prompt + "and responded with " + res + " the user provided this feedback: " + feedback)
+		}
+	}
+
 	return nil
 }
 
